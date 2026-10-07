@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sigla</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23F6F7F4'/%3E%3Ctext x='8' y='48' font-family='Georgia,Times New Roman,serif' font-style='italic' font-weight='700' font-size='48' fill='%231B1F24'%3ES%3C/text%3E%3Ctext x='40' y='47' font-family='Georgia,Times New Roman,serif' font-size='48' fill='%23B3261E'%3E%5D%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+:root{--bg:#F6F7F4;--fg:#1B1F24;--mut:#666C74;--line:#D5D8D2;--card:#FFFFFF;--sub:179,38,30;--acc:102,108,116;--mv:47,95,168;--err:#B3261E;
+--serif:"Literata",Georgia,"Times New Roman",serif;--sans:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181C;--fg:#E6E8E3;--mut:#9AA0A8;--line:#343A41;--card:#1E2227;--sub:242,116,104;--acc:154,160,168;--mv:124,168,236;--err:#F27468}}
+:root[data-theme="dark"]{--bg:#15181C;--fg:#E6E8E3;--mut:#9AA0A8;--line:#343A41;--card:#1E2227;--sub:242,116,104;--acc:154,160,168;--mv:124,168,236;--err:#F27468}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+[hidden]{display:none!important}
+body{margin:0 auto;padding:24px 20px;background:var(--bg);color:var(--fg);font:15px/1.5 var(--sans);max-width:900px}
+#top{margin:0 0 18px;padding-bottom:14px;border-bottom:1px solid var(--fg)}
+h1{font:600 46px/1.05 var(--serif);margin:0;letter-spacing:-.015em}
+.brk{color:rgb(var(--sub));font-weight:700;font-style:normal;margin-left:.05em}
+#top{position:relative}
+#view{position:absolute;right:0;top:8px;display:flex;gap:16px}
+@media(max-width:480px){#view{position:static;margin-bottom:8px}}
+#start{padding:18px 0 20px;border-bottom:1px solid var(--line)}
+.lead{font:19px/1.5 var(--serif);margin:0 0 16px;max-width:36em}
+.steps{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.steps li{display:flex;gap:10px;align-items:baseline;font-size:14.5px;color:var(--mut)}
+.steps b{font:600 26px/1 var(--serif);color:var(--fg);white-space:nowrap}
+@media(max-width:620px){.steps{grid-template-columns:1fr;gap:10px}}
+#savebox{border-top:none}
+.sub{font:italic 17px/1.45 var(--serif);margin:6px 0 0;max-width:60ch}
+.by{font-size:13px;color:var(--mut);margin:8px 0 0}
+input,select,textarea,button{font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:6px 9px}
+button{cursor:pointer;padding:6px 12px}
+button.pri{background:var(--fg);color:var(--bg);border-color:var(--fg);font-weight:600;padding:8px 20px}
+:focus-visible{outline:2px solid rgb(var(--mv));outline-offset:2px}
+textarea{width:100%;height:90px;box-sizing:border-box;font-family:var(--serif);font-size:14px;line-height:1.5}
+details{border-top:1px solid var(--line);padding:9px 0;margin:0}
+details:last-of-type{border-bottom:1px solid var(--line);margin-bottom:14px}
+#setup>details:last-of-type{margin-bottom:6px}
+summary{cursor:pointer;font-weight:600;font-size:14px}
+.hint{font-size:13.5px;color:var(--mut);margin:6px 0 10px;max-width:68ch}
+#rows .w{margin:14px 0;padding:12px 12px 8px;background:var(--card);border:1px solid var(--line);border-radius:6px}
+#rows .w textarea{background:var(--bg)}.wh{display:flex;gap:8px;margin-bottom:4px;flex-wrap:wrap;align-items:center}
+.sig{width:70px;font-family:var(--serif);font-style:italic}.desc{flex:1;min-width:120px}
+.hl{font-size:13px;color:var(--mut);display:flex;gap:6px;align-items:center}.hd{width:52px}
+.pv{font-size:13px;color:var(--mut);min-height:18px}
+.bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:10px 0;font-size:14px;color:var(--mut)}
+.bar label{display:flex;gap:6px;align-items:center}
+#msg,#bmsg{color:var(--err);font-size:14px}
+#strip{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+#stats{font:17px/1.5 var(--serif);margin:22px 0 8px}
+table{border-collapse:collapse;font-size:13px;margin:4px 0 6px;font-variant-numeric:tabular-nums}
+th,td{padding:4px 14px 4px 0;text-align:right;border-bottom:1px solid var(--line)}th{font-weight:600;color:var(--mut)}
+th:first-child,td:first-child{text-align:left}td i{font-family:var(--serif);font-size:15px}
+.scroll{overflow-x:auto}
+#tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:3;display:flex;gap:4px;background:var(--bg);border-bottom:1px solid var(--line);margin:18px 0 14px;overflow-x:auto}
+#tabs button{border:none;border-radius:0;background:none;padding:11px 14px 9px;color:var(--mut);border-bottom:2px solid transparent;white-space:nowrap}
+#tabs button[aria-selected="true"]{color:var(--fg);font-weight:600;border-bottom-color:var(--fg)}
+#res{padding-bottom:46vh}
+/* reading text */
+#heat{font:17px/1.75 var(--serif)}
+.ln{display:grid;grid-template-columns:30px minmax(0,1fr) auto;column-gap:12px;align-items:baseline}
+.ln.sb{margin-top:18px}.prose .ln{margin-bottom:12px}
+.ln.ttl{font-weight:600;margin-bottom:12px}
+.no{font:12px/1 var(--sans);color:var(--line);background:none;border:none;padding:2px 0;text-align:right;font-variant-numeric:tabular-nums}
+button.no{color:var(--mut);opacity:.55}button.no.f5{opacity:1;color:var(--fg)}
+.tx{padding-left:10px;border-left:2px solid transparent}
+.ln.lv .tx{border-left-color:rgba(var(--sub),.75)}
+.ln.mvd .tx{border-left-color:rgba(var(--mv),.9)}
+.mg{display:flex;gap:10px;white-space:nowrap;justify-content:flex-end}
+.gap{margin:1px 0 1px 54px}
+.mk{font:12.5px/1.4 var(--sans);background:none;border:none;border-radius:3px;padding:0 2px;white-space:nowrap}
+.mk.l{color:rgb(var(--sub))}.mk.m{color:rgb(var(--mv))}.mk.b{color:var(--mut);text-decoration:underline dotted;text-underline-offset:3px}
+mark{color:inherit;cursor:pointer;border-radius:2px;padding:0 1px}
+mark.ms{border-bottom:1.5px solid rgba(var(--sub),.8)}
+mark.ma{border-bottom:1.5px dotted rgba(var(--acc),.95)}
+/* apparatus */
+#list{font:15.5px/1.6 var(--serif)}
+.ent{display:grid;grid-template-columns:3.6em minmax(0,1fr);column-gap:12px;padding:2px 0}
+.ent.first{margin-top:5px;padding-top:6px;border-top:1px solid var(--line)}
+.ref{font-weight:700;text-align:right;font-variant-numeric:lining-nums}
+.bd{padding-left:1.2em;text-indent:-1.2em}
+.sg{font-family:var(--serif);font-style:italic}
+.ac{font:12.5px var(--sans);color:var(--mut)}
+.ty{font:12.5px var(--sans);border:none;background:none;margin-left:10px;padding:0;white-space:nowrap;text-indent:0}
+.ty.s{color:rgb(var(--sub))}.ty.a{color:var(--mut)}.ty.m{color:rgb(var(--mv))}
+button.ty{text-decoration:underline dotted;text-underline-offset:3px}
+.tg{font:12.5px var(--sans);color:var(--mut);margin-left:8px}
+#plain{display:none;height:120px;font:13px ui-monospace,monospace;margin-top:10px}
+.nt{font:14px/1.45 var(--sans);color:var(--mut);text-indent:0;margin:2px 0 4px}
+.ent textarea{height:64px;font:14px/1.45 var(--sans);text-indent:0;margin:4px 0}
+.dt{width:92px}
+.exb{border-top:1px solid var(--line);padding:14px 0 10px}
+.exb h3{font:600 17px var(--serif);margin:0 0 2px}
+.exb .hint{margin:2px 0 10px}
+#exq{height:150px;font:14px/1.45 var(--sans)}
+#stext{height:120px;font:12.5px ui-monospace,monospace;margin-top:8px}
+#exout{height:240px;font:12.5px ui-monospace,monospace;margin-top:8px}
+#exmsg{font-size:14px;color:var(--mut);min-height:20px}
+.nosave .savebtn{display:none}
+.mvb{padding:4px 9px;line-height:1}
+#dup{font-size:13.5px;color:var(--fg);margin:8px 0 0;min-height:0}
+#helpbox h3{font:600 15px var(--sans);margin:14px 0 4px}
+#helpbox p,#helpbox li,#helpbox dd{font-size:14px;max-width:70ch}
+#helpbox ol,#helpbox ul{margin:4px 0;padding-left:22px}
+#helpbox dl{margin:4px 0}#helpbox dt{font:600 14.5px var(--serif);margin-top:6px}#helpbox dd{margin:0 0 0 0;color:var(--mut)}
+.key b{font-weight:600}.key p{margin:0 0 6px}.key h4{font:600 13px var(--sans);margin:10px 0 3px}
+.sw{display:inline-block;width:1.6em;height:.9em;border-radius:2px;vertical-align:-1px;margin-right:4px}
+#keybtn{margin-left:auto}
+#agbox{border:none;padding:4px 0}#agbox summary{font-weight:400;color:var(--mut)}
+@media print{
+ #top .by,#view,#start,#savebox,#helpbox,#strip,#setup,#tabs,#sheet,.bar,.hint,#plain,#srcout,#agbox,[data-note],button.no{display:none!important}
+ body{max-width:none;padding:0;background:#fff;color:#000}#res{padding-bottom:0}
+ button.ty{text-decoration:none}.ent{break-inside:avoid}
+}
+/* readings sheet */
+#sheet{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--card);border-top:1px solid var(--fg);box-shadow:0 -8px 28px rgba(0,0,0,.14);transform:translateY(100%);visibility:hidden;transition:transform .18s ease,visibility .18s;padding-bottom:env(safe-area-inset-bottom,0px)}
+#sheet.open{transform:none;visibility:visible}
+@media(prefers-reduced-motion:reduce){#sheet{transition:none}}
+#sheetin{position:relative;max-width:900px;margin:0 auto;padding:12px 52px 16px 20px;max-height:42vh;overflow-y:auto;box-sizing:border-box}
+#shx{position:absolute;right:12px;top:8px;line-height:1;padding:5px 10px}
+#detail{font-size:14px;line-height:1.7}
+#detail .r{font:16px/1.6 var(--serif)}
+#detail .ref{text-align:left;font-family:var(--serif)}
+/* side by side */
+#par{overflow-x:auto;margin:8px 0 16px}
+.pw{position:relative;font:12.5px var(--serif)}
+.pw svg{position:absolute;left:0;top:0}
+.pw path{fill:none}
+.tn{stroke:var(--line);stroke-width:1}
+.tr{stroke:rgba(var(--sub),.6);stroke-width:1.3}
+.tm{stroke:rgba(var(--mv),.95);stroke-width:1.8}
+.ts{stroke:var(--mut);stroke-width:1.2;stroke-dasharray:5 4}
+.pw path.on{stroke:rgb(var(--mv));stroke-width:3}
+.ph{position:absolute;top:0;height:24px;font:15px var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pd{font:12px var(--sans);color:var(--mut);margin-left:6px}
+.pl{position:absolute;height:20px;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-sizing:border-box;padding:0 5px;cursor:pointer;border-radius:2px}
+.pl.rev{background:rgba(var(--sub),.09)}
+.pl.back{background:rgba(var(--sub),.09)}
+.pl.new{background:rgba(var(--sub),.2);box-shadow:inset 3px 0 0 rgba(var(--sub),.9)}
+.pl.mov{background:rgba(var(--mv),.18)}
+.pl.drop{box-shadow:inset -3px 0 0 rgba(var(--sub),.9)}
+.pl.new.drop{box-shadow:inset 3px 0 0 rgba(var(--sub),.9),inset -3px 0 0 rgba(var(--sub),.9)}
+.pl.on{outline:2px solid rgb(var(--mv));outline-offset:-2px}
+.tracing .pl:not(.on){opacity:.4}.tracing path:not(.on){opacity:.2}
+.pn{font:10px var(--sans);color:var(--mut);margin-right:6px;font-variant-numeric:tabular-nums}
+/* line matching */
+#altab{display:grid;grid-template-columns:30px minmax(0,1fr) minmax(0,1fr) 34px;gap:2px 8px;font:14px/1.5 var(--serif);align-items:start;margin-top:8px}
+#altab .an{font:12px var(--sans);color:var(--mut);text-align:right;padding-top:4px}
+#altab .c{padding:2px 6px;border-radius:3px;min-height:22px;cursor:pointer}
+#altab .c.un{background:rgba(var(--sub),.12)}#altab .c.mv{background:rgba(var(--mv),.16)}
+#altab .c.chk{outline:1px dashed var(--mut);outline-offset:-1px}
+.why{font:12px/1.35 var(--sans);color:var(--mut);margin-top:2px}.why b{color:var(--fg);font-weight:600}
+#altab .c.sel{outline:2px solid rgb(var(--mv))}
+#altab i{font:12px var(--sans);color:var(--mut);font-style:normal}
+#altab .ul{padding:0 8px;font-size:13px}
+#altab .hh{font:600 13px var(--sans);color:var(--mut)}
+#srcout{height:140px;font:12px ui-monospace,monospace;margin-top:10px}
+#eq{height:70px;font:13px ui-monospace,monospace}
+.sv{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}
+.sv .nm{flex:1;min-width:140px;font-family:var(--serif);font-size:15.5px}.sv .dt{font-size:12.5px;color:var(--mut)}
+</style></head><body>
+<header id="top">
+<div id="view"><button id="thbtn" class="mk b" title="Colour scheme: follow the device, or force light or dark">Theme: auto</button><button id="szbtn" class="mk b" title="Text size, for projecting">Text: normal</button></div>
+<h1>Sigla<span class="brk" aria-hidden="true">]</span></h1>
+<p class="sub">A collator for the witnesses of a text: variants, transpositions and an apparatus, in verse or prose.</p>
+<p class="by">Vibe-coded by Steve Marsden and Claude</p>
+</header>
+<section id="start">
+<p class="lead">Paste two or more versions of a poem or a passage of prose. Sigla shows where they differ, line by line and word by word, and sets out the differences as a scholarly apparatus.</p>
+<ol class="steps">
+<li><b>1<span class="brk">]</span></b><span>Paste each version into its own box, with a short label.</span></li>
+<li><b>2<span class="brk">]</span></b><span>Choose the base text the others are measured against.</span></li>
+<li><b>3<span class="brk">]</span></b><span>Collate, then read the text, the apparatus, or the versions side by side.</span></li>
+</ol>
+<div class="bar"><button class="pri" id="ex2">See an example</button><span>or paste your own texts below.</span></div>
+</section>
+<details id="savebox">
+<summary>Saved collations</summary>
+<div class="bar"><label>Name <input id="sname" placeholder="e.g. City in the Sea" style="width:220px"></label><button id="save">Save this collation</button><span id="smsg"></span></div>
+<p class="hint" id="swhere">Checking where collations can be saved…</p>
+<div id="slist"></div>
+<div class="exb">
+<p class="hint">A collation can also be kept as a file, or as text to paste. Either one carries the witnesses, settings, manual line matches, classes and notes, so it can move between devices or be handed in.</p>
+<div class="bar"><button id="fsave">Save collation to file</button><button id="fopen">Open collation file</button><input type="file" id="ofile" accept=".json,application/json,text/plain" hidden><button id="tshow">Show collation as text</button><button id="tload">Load pasted collation</button></div>
+<textarea id="stext" hidden placeholder="Paste a collation here, then tap “Load pasted collation”." aria-label="A collation as text"></textarea>
+</div>
+</details>
+<details id="helpbox">
+<summary>Help</summary>
+<h3>A first collation</h3>
+<ol><li>Paste each version of the text into its own box and give each a siglum (a short label such as A or 1856). To paste several at once, use “Paste several witnesses at once”.</li><li>Choose the base text: the version every other one is measured against.</li><li>Tap Collate. The Text tab shows the base text with every difference marked; the Apparatus tab lists them.</li></ol>
+<p>Tap “Load an example” to see a finished collation before pasting anything.</p>
+<h3>Words used here</h3>
+<dl>
+<dt>Witness</dt><dd>One version of the text: an edition, a magazine printing, a manuscript.</dd>
+<dt>Siglum (plural sigla)</dt><dd>The short label that stands for a witness in the apparatus.</dd>
+<dt>Base text</dt><dd>The witness the others are compared with. Choosing it is a convenience and makes no claim that it is the best or the earliest.</dd>
+<dt>Variant</dt><dd>A place where a witness reads differently from the base text.</dd>
+<dt>Lemma</dt><dd>The base-text reading, printed before the bracket in an entry: <i>lemma</i>] A; <i>other reading</i> B.</dd>
+<dt>Substantive</dt><dd>A variant that changes the wording.</dd>
+<dt>Accidental</dt><dd>A variant in punctuation, capitals, word division or spelling only.</dd>
+<dt>Apparatus</dt><dd>The full list of variants.</dd>
+<dt>Turnover</dt><dd>The run-on part of a verse line too long for the page, printed indented on the next line.</dd>
+<dt>Transposition</dt><dd>The same line or passage standing in a different place.</dd>
+</dl>
+<h3>What was done to these texts</h3>
+<div id="helpnote"><p>After you collate, this lists exactly what Sigla tidied or treated as equal for this collation.</p></div>
+<h3>Limits to keep in mind</h3>
+<ul><li>Each witness is compared with the base text separately. Two witnesses are grouped only when their readings are the same.</li><li>It works best on verse. In prose, a sentence moved inside a paragraph shows as a cut and an insertion.</li><li>Line matching is a judgement. Check the matches the Line matching tab marks as doubtful, and correct them there.</li><li>A reading is only as good as the transcription pasted in. Check surprising readings against the source.</li><li>Substantive and accidental are assigned by rule; change any you disagree with in the Apparatus tab.</li></ul>
+<div id="takeit">
+<h3>Take the tool with you</h3>
+<p>Sigla is one web page. Copy it out to keep your own copy, host it elsewhere, or have its method reviewed.</p>
+<div class="bar"><button id="srcbtn">Copy this tool’s HTML</button><button id="engbtn">Copy the collation engine only</button><span id="srcmsg"></span></div>
+<textarea id="srcout" readonly hidden aria-label="The complete HTML of this tool"></textarea>
+</div>
+</details>
+<div id="strip" hidden><span id="stxt"></span><button id="edit">Edit witnesses and settings</button><button id="fresh2">Start fresh</button><span id="snote" class="hint"></span></div>
+<div id="setup">
+<details id="bulkbox">
+<summary>Paste several witnesses at once</summary>
+<p class="hint">Paste the whole block. Each witness must start with a header line; the header becomes its description.</p>
+<textarea id="bulk" placeholder="Text: first witness header&#10;…text…&#10;Text: second witness header&#10;…text…" aria-label="Several witnesses in one block"></textarea>
+<div class="bar"><label>Header lines begin with <input id="mark" value="Text:" style="width:90px"></label><button id="split">Split into witnesses</button><span id="bmsg"></span></div>
+</details>
+<div id="rows"></div>
+<p id="dup" role="status"></p>
+<div class="bar"><button id="add">+ Add witness</button><button id="bydate">Sort by date</button><button id="example">Load an example</button><button id="fresh">Start fresh</button></div>
+<details id="optbox" style="margin-top:14px">
+<summary>Settings</summary>
+<div class="bar"><button id="proof">Proofreading comparison</button><button id="usual">Usual settings</button></div>
+<p class="hint" id="pmsg">Proofreading comparison is for two texts that ought to match, such as two transcriptions of one edition: it stops treating quote and dash forms as equal.</p>
+<div class="bar">
+<label>Compare against <select id="against"></select></label>
+<label>Text is <select id="mode"><option value="auto">Auto-detect</option><option value="verse">Verse (blank line = stanza break)</option><option value="para">Prose (each line a paragraph)</option><option value="wrap">Prose (blank line between paragraphs)</option></select></label>
+</div>
+<div class="bar">
+<label><input type="checkbox" id="ocl" checked> Strip page/column markers and rules</label>
+<label><input type="checkbox" id="otj" checked> Join turnover lines and words hyphenated across them</label>
+<label><input type="checkbox" id="osn" checked> Strip stanza numbers</label>
+<label><input type="checkbox" id="owt" checked> Rare words count for more when matching lines</label>
+<label><input type="checkbox" id="oq" checked> Curly = straight quotes</label>
+<label><input type="checkbox" id="od" checked> Dash forms alike</label>
+<label><input type="checkbox" id="oc"> Ignore capitals</label>
+<label><input type="checkbox" id="op"> Ignore punctuation</label>
+<label><input type="checkbox" id="opar" checked> Record stanza and paragraph breaks</label>
+</div>
+<div class="bar">
+<label>Line matching: loose <input type="range" id="thr" min="0.3" max="0.8" step="0.05" value="0.5"> strict</label>
+</div>
+</details>
+<details id="eqbox">
+<summary>Spelling variants to count as accidental</summary>
+<p class="hint">One group per line, joined with = signs. A reading that differs from the base only in these spellings is classed as accidental.</p>
+<textarea id="eq" placeholder="marvelous = marvellous&#10;tho' = though" aria-label="Spellings to treat as the same word"></textarea>
+</details>
+<div class="bar"><label>Base text <select id="base"></select></label><button id="go" class="pri">Collate</button><span id="msg"></span></div>
+</div>
+<div id="res" style="display:none">
+<p id="stats"></p>
+<div class="scroll"><table id="per"></table></div>
+<details id="agbox"><summary>Agreement between witnesses</summary><p class="hint">For each pair: the places of substantive variation where the two read alike, out of the places where both are present.</p><div class="scroll"><table id="agt"></table></div></details>
+<div id="tabs" role="tablist">
+<button role="tab" data-tab="text" aria-selected="true">Text</button>
+<button role="tab" data-tab="par" aria-selected="false">Side by side</button>
+<button role="tab" data-tab="app" aria-selected="false">Apparatus</button>
+<button role="tab" data-tab="al" aria-selected="false" id="altabbtn">Line matching</button>
+<button role="tab" data-tab="ex" aria-selected="false">Export</button>
+<button id="keybtn">Key</button>
+</div>
+<section id="v-text">
+<p class="hint">Tap a marked passage for its readings, or a line number to see that line in every witness. “Key” explains the marks.</p>
+<div id="heat"></div>
+</section>
+<section id="v-par" hidden>
+<p class="hint">Each column is one witness, in the order of the witness boxes. Tap a line to follow it across them.</p>
+<div id="par"></div>
+</section>
+<section id="v-app" hidden>
+<div class="bar">
+<label>Show <select id="filt"><option value="all">All</option><option value="S">Substantive</option><option value="A">Accidental</option><option value="L">Lines, moves and breaks</option></select></label>
+<label><input type="checkbox" id="ofull"> Long readings in full</label>
+<label>Witness <select id="fwit"></select></label>
+<label><input type="checkbox" id="fsing"> Singular readings only</label>
+<button id="copy">Copy list</button><button id="print">Print</button><button id="rcreset" hidden>Reset classes set by hand</button><span id="cmsg"></span>
+</div>
+<p class="hint">Tap “substantive” or “accidental” on an entry to change its class. Tap “note” to attach a comment that travels into the exports.</p>
+<div id="list"></div>
+<textarea id="plain" aria-label="Plain-text variant list"></textarea>
+</section>
+<section id="v-al" hidden>
+<p class="hint">Tap a base line, then the witness line it should match; × breaks a match. Outlined matches say why they are doubtful.</p>
+<p id="alsum" class="hint"></p>
+<div class="bar"><label>Witness <select id="alw"></select></label><label><input type="checkbox" id="alonly"> Only matches to check</label><button id="alclear">Clear manual matches</button><span id="almsg"></span></div>
+<div id="altab"></div>
+</section>
+<section id="v-ex" hidden>
+<div class="bar"><label>Title <input id="mt" style="width:220px"></label><label>Author <input id="ma" style="width:160px"></label><label>Editor <input id="me" style="width:160px"></label></div>
+<p class="hint">Witness dates are set beside each witness, under “Edit witnesses and settings”. Notes are added in the Apparatus tab.</p>
+<div class="exb">
+<h3>Edition</h3>
+<p class="hint">A web page laid out like a printed edition: witnesses, a note on the text, the base text with line numbers, then the historical collation, whole-line differences and accidentals. Open it and print to PDF.</p>
+<div class="bar"><button class="savebtn" data-ex="ed" data-act="save">Save file</button><button data-ex="ed" data-act="show">Show to copy</button></div>
+</div>
+<div class="exb">
+<h3>TEI XML</h3>
+<p class="hint">The apparatus in TEI parallel segmentation, for a press, a repository or another tool. When Sigla runs inside Claude it saves with a .txt ending, because .xml files cannot be saved there; rename it afterwards.</p>
+<div class="bar"><button class="savebtn" data-ex="tei" data-act="save">Save file</button><button data-ex="tei" data-act="show">Show to copy</button></div>
+</div>
+<div class="exb">
+<h3>Briefing for an AI model</h3>
+<p class="hint">One Markdown file holding everything a model needs to reason about the collation: your questions, the witnesses, how the texts were prepared, a line-by-line correspondence table, the complete apparatus and the witness texts.</p>
+<label class="hint" for="exq">Questions to put to the model</label>
+<textarea id="exq" aria-label="Questions to put to the model">1. In what order were these versions most plausibly produced, and what in the variants supports that order?
+2. Which changes look like deliberate authorial revision, which like house style or a compositor's habit, and which like error?
+3. Do any witnesses share readings against the others in a way that suggests one was set from another?
+4. What patterns run through the accidentals (punctuation, capitalisation, spelling)?
+5. Which readings are most likely slips in my transcription and should be checked against the originals?
+6. What is the overall direction of the revision, and where does a change run against it?</textarea>
+<div class="bar"><label><input type="checkbox" id="exfull" checked> Include the full witness texts</label><button class="savebtn" data-ex="md" data-act="save">Save file</button><button data-ex="md" data-act="show">Show to copy</button></div>
+</div>
+<p id="exmsg"></p>
+<textarea id="exout" readonly hidden aria-label="Export text"></textarea>
+</section>
+</div>
+<div id="sheet"><div id="sheetin"><button id="shx" aria-label="Close readings">×</button><div id="detail"></div></div></div>
+<script id="selfsrc" type="text/plain"></script>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const rows=$('rows');let S=null,OV={},RC={},NOTES={},EQ=new Map(),KEEP=false,SIG='',selB=null,DL;
+
+/* ---------- witness rows ---------- */
+function addRow(sig,desc,text,head,date){
+  const d=document.createElement('div');d.className='w';
+  d.innerHTML='<div class="wh"><input class="sig" placeholder="Siglum"><input class="desc" placeholder="Description, e.g. Examiner 1889"><input class="dt" placeholder="Date" aria-label="Date of this witness"><label class="hl">Heading lines <input class="hd" type="number" min="0" max="9" value="0"></label><button class="mvb up" title="Move this witness up" aria-label="Move up">\u25b2</button><button class="mvb dn" title="Move this witness down" aria-label="Move down">\u25bc</button><button class="rm" title="Remove witness">\u00d7</button></div><textarea class="txt" placeholder="Paste this witness here"></textarea><div class="pv"></div>';
+  rows.appendChild(d);
+  d.querySelector('.sig').value=sig||'';d.querySelector('.desc').value=desc||'';d.querySelector('.dt').value=date||'';d.querySelector('.txt').value=text||'';
+  if(head!==undefined){d.querySelector('.hd').value=head;d.dataset.manual='1'}
+  d.querySelector('.txt').addEventListener('input',()=>preview(d));
+  d.querySelector('.hd').addEventListener('input',()=>{d.dataset.manual='1';preview(d)});
+  d.querySelector('.sig').addEventListener('input',refresh);
+  d.querySelector('.rm').addEventListener('click',()=>{d.remove();refresh();touch()});
+  d.querySelector('.up').addEventListener('click',()=>{const p=d.previousElementSibling;if(p){rows.insertBefore(d,p);refresh();touch()}});
+  d.querySelector('.dn').addEventListener('click',()=>{const n=d.nextElementSibling;if(n){rows.insertBefore(n,d);refresh();touch()}});
+  preview(d);refresh();
+}
+function refresh(){
+  const sigs=[...rows.querySelectorAll('.sig')].map(s=>s.value.trim()).filter(Boolean);
+  const b=$('base'),a=$('against'),bv=b.value,av=a.value;
+  b.innerHTML=sigs.map(s=>'<option>'+esc(s)+'</option>').join('');
+  a.innerHTML='<option value="">All witnesses</option>'+sigs.map(s=>'<option>'+esc(s)+'</option>').join('');
+  if(sigs.includes(bv))b.value=bv;if(sigs.includes(av))a.value=av;
+}
+function preview(d){
+  const raw=d.querySelector('.txt').value,pv=d.querySelector('.pv'),hd=d.querySelector('.hd');
+  if(!raw.trim()){pv.textContent='';return}
+  const c=clean(raw);
+  if(!d.dataset.manual)hd.value=guessHead(c);
+  const nb=c.lines.filter(Boolean),h=Math.min(Math.max(+hd.value||0,0),nb.length),first=nb[h]||'';
+  let s=(nb.length-h)+' lines'+(h?' + '+h+' heading':'')+', begins \u201c'+first.split(HYJ).join('').split(/\s+/).slice(0,8).join(' ')+'\u2026\u201d';
+  if(c.removed.length){
+    const u=[];c.removed.forEach(x=>{const f=u.find(y=>y[0]===x);if(f)f[1]++;else u.push([x,1])});
+    s+='. Tidied: '+u.slice(0,6).map(x=>x[0]+(x[1]>1?' \u00d7'+x[1]:'')).join(', ')+(u.length>6?', \u2026':'');
+  }
+  pv.textContent=s;
+}
+const previewAll=()=>rows.querySelectorAll('.w').forEach(preview);
+['A','B','C'].forEach(s=>addRow(s));
+$('add').addEventListener('click',()=>addRow(''));
+['ocl','otj','osn'].forEach(k=>$(k).addEventListener('change',previewAll));
+$('mark').addEventListener('input',previewAll);
+
+/* ---------- paste clean-up ---------- */
+const LOC=/\[\s*(?:begin\s+)?(?:pages?|pp?\.|columns?|cols?\.|folio|fol\.|leaf|sig\.)\s*[^\]\n]{0,24}\]/gi;
+const RULE=/^[\s~\-\u2014\u2013_*=\u00b7.\u2022]+$/;
+const HYJ='\uE000'; /* marks a word broken by a hyphen at a turnover, settled once every witness is read */
+function clean(raw){
+  const on=$('ocl').checked,tj=$('otj').checked,sn=$('osn').checked,mk=$('mark').value.trim().toLowerCase();
+  const removed=[],lines=[],src=raw.replace(/\r/g,'').replace(/\u00a0/g,' ').split('\n');
+  let ruleAt=-1,nn=0,prevRaw='',eat=false,glued=0;
+  if(sn)src.forEach(l=>{if(/^\d{1,3}\p{L}/u.test(l.trim()))glued++});
+  src.forEach(l=>{
+    let t=l;
+    if(on){
+      if(mk&&t.trim().toLowerCase().startsWith(mk)){removed.push('header line');return}
+      let hit=false;t=t.replace(LOC,m=>{removed.push(m.replace(/\s+/g,' '));hit=true;return' '});
+      if(hit&&!t.trim()){eat=true;return}
+      const r=t.trim();
+      if(r.replace(/\s/g,'').length>=3&&RULE.test(r)){removed.push('rule \u201c'+(r.length>6?r.slice(0,6)+'\u2026':r)+'\u201d');if(ruleAt<0)ruleAt=nn;lines.push('');return}
+    }
+    let x=t.trim();
+    if(!x){if(!eat)lines.push('');return}
+    eat=false;
+    const last=lines.length?lines[lines.length-1]:'';
+    if(tj&&last&&/^\s/.test(t)&&/[\s\-]$/.test(prevRaw)){
+      lines[lines.length-1]=/[\p{L}\p{N}]-$/u.test(last)&&/^[\p{L}\p{N}]/u.test(x)?last+HYJ+x:last+' '+x;
+      removed.push('turnover joined');prevRaw=t;return;
+    }
+    if(sn){
+      const m=x.match(/^\d{1,3}(?=\p{L})/u)||(glued>=2&&x.match(/^\d{1,3}\s+(?=\p{Lu})/u));
+      if(m){x=x.slice(m[0].length);removed.push('stanza number');lines.push('')}
+    }
+    nn++;lines.push(x);prevRaw=t;
+  });
+  return{lines:lines,removed:removed,ruleAt:ruleAt};
+}
+/* a word hyphenated across a turnover: keep the hyphen only if some witness prints the hyphenated form whole */
+function settleHyphens(wits){
+  const vocab=new Set(),low=x=>x.toLowerCase().replace(/\u2019/g,"'");
+  wits.forEach(w=>w.c.lines.forEach(l=>{const m=l.split('-'+HYJ).join(' ').match(TOK);if(m)m.forEach(x=>vocab.add(low(x)))}));
+  const HY=/([\p{L}\p{N}'\u2019]+)-\uE000([\p{L}\p{N}'\u2019]+)/gu;
+  wits.forEach(w=>{w.c.lines=w.c.lines.map(l=>l.indexOf(HYJ)<0?l:l.replace(HY,(m,a,b)=>vocab.has(low(a+'-'+b))&&!vocab.has(low(a+b))?a+'-'+b:a+b).split(HYJ).join(''))});
+}
+function guessHead(c){
+  const nb=c.lines.filter(Boolean);
+  if(c.ruleAt>0&&c.ruleAt<=4)return c.ruleAt;
+  let k=0;while(k<4&&k<nb.length-1&&!/\p{Ll}/u.test(nb[k])&&(/\p{L}.*\p{L}/u.test(nb[k])||/^\d{1,3}\.?$/.test(nb[k])))k++;
+  if(k)return k;
+  const f=nb[0]||'',ws=f.split(/\s+/),cap=w=>/^\P{L}*\p{Lu}/u.test(w),big=ws.filter(w=>w.replace(/[^\p{L}]/gu,'').length>3);
+  if(nb.length>1&&ws.length<=10&&big.every(cap)&&(big.length||(ws.length<=4&&/[.]$/.test(f)&&ws.every(cap))))return 1;
+  return 0;
+}
+
+/* ---------- split a bulk paste ---------- */
+$('split').addEventListener('click',()=>{
+  const mk=$('mark').value.trim().toLowerCase(),bm=$('bmsg');bm.textContent='';
+  if(!mk){bm.textContent='Say what the header lines begin with.';return}
+  const parts=[];let cur=null;
+  $('bulk').value.replace(/\r/g,'').split('\n').forEach(l=>{
+    const t=l.trim();
+    if(t.toLowerCase().startsWith(mk)){cur={desc:t.slice(mk.length).trim(),t:[]};parts.push(cur)}
+    else if(cur)cur.t.push(l);
+  });
+  const good=parts.filter(p=>p.t.join('').trim());
+  if(good.length<2){bm.textContent='Found '+good.length+' header line'+(good.length===1?'':'s')+' beginning \u201c'+$('mark').value.trim()+'\u201d. At least two are needed.';return}
+  rows.querySelectorAll('.w').forEach(r=>{if(!r.querySelector('.txt').value.trim())r.remove()});
+  const used=[...rows.querySelectorAll('.sig')].map(s=>s.value.trim());let code=65;
+  good.forEach(p=>{let s;do{s=String.fromCharCode(code++)}while(used.includes(s)&&code<91);used.push(s);addRow(s,p.desc,p.t.join('\n').replace(/^\n+|\n+$/g,''),undefined,(p.desc.match(/\b(?:1[5-9]|20)\d\d(?:\s*[-\u2013]\s*\d{2,4})?\b/)||[''])[0].replace(/\s+/g,''))});
+  $('bulk').value='';$('bulkbox').open=false;
+  const len=good.map(p=>p.t.join(' ').length).sort((a,b)=>a-b),med=len[Math.floor((len.length-1)/2)];
+  const long=[...rows.querySelectorAll('.w')].filter(r=>r.querySelector('.txt').value.length>1.7*med).map(r=>r.querySelector('.sig').value);
+  bm.textContent='';$('msg').textContent='Split into '+good.length+' witnesses. Check the sigla and heading lines, choose a base, then collate.'+
+    (long.length?' '+long.join(' and ')+(long.length>1?' are':' is')+' much longer than the rest: a header line may be missing inside.':'');
+});
+
+/* ---------- tokens and units ---------- */
+const TOK=/[\p{L}\p{N}]+(?:['\u2019\-][\p{L}\p{N}]+)*|[^\s\p{L}\p{N}]/gu;
+function tokenize(text,o){
+  if(o.d)text=text.replace(/[ \t]*(\u2014|\u2013|--+)[ \t]*/g,'\u2014');
+  const toks=[];let m;TOK.lastIndex=0;
+  while((m=TOK.exec(text))){
+    const d=m[0],w=/[\p{L}\p{N}]/u.test(d);if(!w&&o.p)continue;
+    let k=d;if(o.q)k=k.replace(/[\u201c\u201d]/g,'"').replace(/[\u2018\u2019]/g,"'");
+    if(o.c)k=k.toLowerCase();
+    toks.push({d:d,k:k,w:w});
+  }
+  return toks;
+}
+const norm0=d=>d.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/['\u2019]d$/,'ed').replace(/[^\p{L}\p{N}]/gu,'');
+const norm=t=>{if(t.nm===undefined){const x=norm0(t.d);t.nm=EQ.get(x)||x}return t.nm};
+function parseEQ(){
+  EQ=new Map();
+  $('eq').value.split('\n').forEach(l=>{const ws=l.split(/[=,]/).map(x=>norm0(x.trim())).filter(Boolean);if(ws.length>1)ws.slice(1).forEach(x=>{if(x!==ws[0])EQ.set(x,ws[0])})});
+}
+const keyOf=ts=>ts.map(t=>t.k).join(' ');
+const squash=ts=>ts.filter(t=>!t.br).map(norm).join('');
+const nopar=ts=>ts.filter(t=>!t.br).map(t=>t.k).join(' ');
+function cls(a,b){if(squash(a)!==squash(b))return'S';return nopar(a)===nopar(b)?'P':'A'}
+function prep(w,mode,o){
+  const L=[];let blank=false;
+  w.c.lines.forEach(t=>{if(!t){blank=true;return}L.push({t:t,brk:blank});blank=false});
+  const h=Math.min(w.head,L.length),SL={d:'/',k:'/',w:false,br:true};
+  w.hd=[];L.slice(0,h).forEach((x,i)=>{if(i)w.hd.push(SL);tokenize(x.t,o).forEach(t=>w.hd.push(t))});
+  const body=L.slice(h);let raw=[];
+  if(mode==='wrap')body.forEach((x,i)=>{if(i===0||x.brk)raw.push({t:x.t,brk:false});else raw[raw.length-1].t+=' '+x.t});
+  else raw=body.map(x=>({t:x.t,brk:mode==='verse'&&x.brk}));
+  w.units=[];let carry=false;
+  raw.forEach(x=>{
+    const toks=tokenize(x.t,o);
+    if(!toks.length){carry=carry||x.brk;return}
+    const bag=new Map();let wc=0;
+    toks.forEach(t=>{if(t.w){const k=norm(t);bag.set(k,(bag.get(k)||0)+1);wc++}});
+    w.units.push({toks:toks,brk:(x.brk||carry)&&w.units.length>0,n:w.units.length+1,bag:bag,wc:wc});carry=false;
+  });
+}
+let IDF=null; /* word -> weight; a word found in few lines counts for more than one found in most */
+function dice(a,b){
+  if(!a.wc||!b.wc)return 0;
+  let s=a.bag,l=b.bag;if(s.size>l.size){s=b.bag;l=a.bag}
+  let c=0;
+  if(!IDF){s.forEach((v,k)=>{const x=l.get(k);if(x)c+=v<x?v:x});return 2*c/(a.wc+b.wc)}
+  s.forEach((v,k)=>{const x=l.get(k);if(x)c+=(v<x?v:x)*(IDF.get(k)||1)});
+  return 2*c/(a.ws+b.ws);
+}
+function weigh(wits){
+  IDF=null;if(!$('owt').checked)return;
+  const df=new Map();let N=0;
+  wits.forEach(w=>w.units.forEach(u=>{N++;u.bag.forEach((v,k)=>df.set(k,(df.get(k)||0)+1))}));
+  IDF=new Map();df.forEach((d,k)=>IDF.set(k,Math.log(1+N/d)));
+  wits.forEach(w=>w.units.forEach(u=>{let x=0;u.bag.forEach((v,k)=>{x+=v*IDF.get(k)});u.ws=x}));
+}
+function cat(units,idx,BR){const r=[];idx.forEach((k,q)=>{if(q&&BR)r.push(BR);units[k].toks.forEach(t=>r.push(t))});return r}
+
+/* ---------- word-level diff (longest common subsequence) ---------- */
+function diff(a,b){
+  const n=a.length,m=b.length,W=m+1,L=new Uint16Array((n+1)*W);
+  for(let i=1;i<=n;i++){const ak=a[i-1].k,r=i*W,pr=(i-1)*W;
+    for(let j=1;j<=m;j++)L[r+j]=ak===b[j-1].k?L[pr+j-1]+1:(L[pr+j]>=L[r+j-1]?L[pr+j]:L[r+j-1]);}
+  const al=new Int32Array(n).fill(-1),ins=new Array(n+1).fill(null);
+  let i=n,j=m;
+  while(i>0||j>0){
+    if(i>0&&j>0&&a[i-1].k===b[j-1].k){al[i-1]=j-1;i--;j--}
+    else if(j>0&&(i===0||L[i*W+j-1]>=L[(i-1)*W+j])){(ins[i]||(ins[i]=[])).unshift(j-1);j--}
+    else i--;
+  }
+  /* where a cut or an insertion could begin or end on the same punctuation mark, let it end on it */
+  for(let q=0;q<n;q++){
+    if(al[q]>=0)continue;
+    let e=q;while(e<n&&al[e]<0)e++;
+    let clear=e<n&&e-q>1;for(let g=q;clear&&g<=e;g++)if(ins[g])clear=false;
+    while(clear&&q<e&&!a[q].w&&a[q].k===a[e].k){al[q]=al[e];al[e]=-1;q++;e++;if(e>=n||al[e]<0||ins[e])clear=false}
+    q=e;
+  }
+  for(let g=0;g<n;g++){
+    const x=ins[g];
+    if(!x||x.length<2||al[g]!==x[x.length-1]+1||b[x[0]].w||b[x[0]].k!==a[g].k)continue;
+    if(g>0&&al[g-1]<0)continue;
+    const moved=x.slice(1);moved.push(al[g]);al[g]=x[0];ins[g]=null;ins[g+1]=moved.concat(ins[g+1]||[]);
+  }
+  return{al:al,ins:ins};
+}
+
+/* ---------- line-level alignment with move detection ---------- */
+function align(B,W,T,ov){
+  const n=B.length,m=W.length;
+  if(n*m>8e6)throw new Error('too many lines or paragraphs to match ('+n+' against '+m+')');
+  const sim=new Float32Array(n*m),fI=new Map(),fJ=new Map();
+  if(ov)for(const k in ov.force){const i=+k,j=ov.force[k];if(i<n&&j<m){fI.set(i,j);fJ.set(j,i)}}
+  for(let i=0;i<n;i++)for(let j=0;j<m;j++){
+    let s;
+    if(fI.has(i)||fJ.has(j))s=fI.get(i)===j?9:0;
+    else if(ov&&ov.forbid[i+':'+j])s=0;
+    else s=dice(B[i],W[j]);
+    sim[i*m+j]=s;
+  }
+  const Wd=m+1,D=new Float32Array((n+1)*Wd),dir=new Uint8Array((n+1)*Wd);
+  for(let i=1;i<=n;i++)for(let j=1;j<=m;j++){
+    let v=D[(i-1)*Wd+j],d=2;const l=D[i*Wd+j-1];if(l>v){v=l;d=3}
+    const s=sim[(i-1)*m+j-1];
+    if(s>=T&&s>0){const x=D[(i-1)*Wd+j-1]+s;if(x>=v){v=x;d=1}}
+    D[i*Wd+j]=v;dir[i*Wd+j]=d;
+  }
+  const bm=new Int32Array(n).fill(-1),wm=new Int32Array(m).fill(-1),bB=new Array(n).fill(null),wB=new Array(m).fill(null),blocks=[];
+  const mk=(i,j,mv,how)=>{const b={bi:[i],wj:[j],mv:mv,how:how};bm[i]=j;wm[j]=i;bB[i]=b;wB[j]=b;blocks.push(b)};
+  let i=n,j=m;
+  while(i>0&&j>0){const d=dir[i*Wd+j];if(d===1){mk(i-1,j-1,false,'dp');i--;j--}else if(d===2)i--;else j--}
+  /* a line or paragraph split in two (or two run together): absorb the stray half */
+  const isFree=(arr,k)=>k>=0&&k<arr.length&&arr[k]===-1;
+  const bagSum=(U,idx)=>{const r=new Map();idx.forEach(k=>U[k].bag.forEach((v,w)=>r.set(w,(r.get(w)||0)+v)));return r};
+  const covered=(u,own,opp)=>{if(u.wc<2)return false;let c=0;u.bag.forEach((v,w)=>{const left=(opp.get(w)||0)-(own.get(w)||0);if(left>0)c+=v<left?v:left});return c/u.wc>=0.6};
+  blocks.slice().forEach(b=>{
+    let ch=true;
+    while(ch){
+      ch=false;const ob=bagSum(B,b.bi),ow=bagSum(W,b.wj);
+      for(const k of [b.bi[0]-1,b.bi[b.bi.length-1]+1])
+        if(isFree(bm,k)&&!fI.has(k)&&covered(B[k],ob,ow)){b.bi.push(k);b.bi.sort((x,y)=>x-y);bm[k]=-2;bB[k]=b;ch=true;break}
+      if(ch)continue;
+      for(const k of [b.wj[0]-1,b.wj[b.wj.length-1]+1])
+        if(isFree(wm,k)&&!fJ.has(k)&&covered(W[k],ow,ob)){b.wj.push(k);b.wj.sort((x,y)=>x-y);wm[k]=-2;wB[k]=b;ch=true;break}
+    }
+  });
+  /* transposed lines: similar leftovers on each side */
+  const fr=(a,b)=>a>=0&&a<n&&b>=0&&b<m&&bm[a]===-1&&wm[b]===-1;
+  const cand=[];
+  for(let a=0;a<n;a++)if(bm[a]===-1)for(let b=0;b<m;b++)if(wm[b]===-1){const s=sim[a*m+b];if(s>=T&&s>0)cand.push([s,a,b])}
+  cand.forEach(c=>{const a=c[1],b=c[2];
+    if(fr(a-1,b-1)&&sim[(a-1)*m+b-1]>=T)c[0]+=.2;
+    if(fr(a+1,b+1)&&sim[(a+1)*m+b+1]>=T)c[0]+=.2});
+  cand.sort((x,y)=>y[0]-x[0]||x[1]-y[1]||x[2]-y[2]);
+  cand.forEach(c=>{if(fr(c[1],c[2]))mk(c[1],c[2],true,'move')});
+  let ch=true;
+  while(ch){ch=false;
+    blocks.slice().forEach(b=>{if(!b.mv)return;
+      [[1,1],[-1,-1]].forEach(d=>{const x=b.bi[0]+d[0],y=b.wj[0]+d[1];
+        if(fr(x,y)&&sim[x*m+y]>=T*.6&&sim[x*m+y]>0){mk(x,y,true,'ext');ch=true}})})}
+  const gaps=()=>{
+    const an=blocks.filter(b=>!b.mv).sort((x,y)=>x.bi[0]-y.bi[0]),out=[];let pb=-1,pw=-1;
+    for(let k=0;k<=an.length;k++){
+      const nb=k<an.length?an[k].bi[0]:n,nw=k<an.length?an[k].wj[0]:m,g={after:pb,b:[],w:[]};
+      for(let a=pb+1;a<nb;a++)if(bm[a]===-1)g.b.push(a);
+      for(let c=pw+1;c<nw;c++)if(wm[c]===-1)g.w.push(c);
+      if(g.b.length||g.w.length)out.push(g);
+      if(k<an.length){pb=an[k].bi[an[k].bi.length-1];pw=an[k].wj[an[k].wj.length-1]}
+    }
+    return out;
+  };
+  /* leftovers standing in the same place, loosely alike: treat as the same line revised */
+  gaps().forEach(g=>{if(g.b.length&&g.b.length===g.w.length)g.b.forEach((a,k)=>{const s=sim[a*m+g.w[k]];if(s>=T*.6&&s>0)mk(a,g.w[k],false,'gap')})});
+  const st=new Array(n),adds=new Map(),rgs=[];
+  for(let a=0;a<n;a++)st[a]=bB[a]?{t:bB[a].mv?'V':'M',blk:bB[a]}:{t:'O'};
+  gaps().forEach(g=>{
+    if(g.b.length&&g.w.length){
+      let e=0;while(e+1<g.b.length&&g.b[e+1]===g.b[e]+1)e++;
+      const rg={bi:g.b.slice(0,e+1),wj:g.w};rgs.push(rg);rg.bi.forEach(a=>{st[a]={t:'R',rg:rg}});
+    }else if(g.w.length)adds.set(g.after,g.w);
+  });
+  const runs=[];
+  blocks.filter(b=>b.mv).sort((x,y)=>x.bi[0]-y.bi[0]).forEach(b=>{
+    const r=runs[runs.length-1];
+    if(r&&r.bi[r.bi.length-1]===b.bi[0]-1&&r.wj[r.wj.length-1]===b.wj[0]-1){r.bi.push(b.bi[0]);r.wj.push(b.wj[0])}
+    else runs.push({bi:[b.bi[0]],wj:[b.wj[0]]});
+  });
+  runs.forEach(r=>{
+    r.dest=-1;
+    for(let c=r.wj[0]-1;c>=0;c--){const b=wB[c];if(b&&!b.mv){r.dest=b.bi[b.bi.length-1];break}}
+    r.bi.forEach(a=>{st[a].run=r});
+  });
+  /* doubt: a match near the threshold is weak; a match with a near-equal candidate elsewhere is ambiguous */
+  blocks.forEach(b=>{
+    const i0=b.bi[0],j0=b.wj[0];b.sc=sim[i0*m+j0];b.flags=[];
+    if(fI.get(i0)===j0){b.forced=true;return}
+    let alt=0,at=null;
+    for(let c=0;c<m;c++){if(b.wj.indexOf(c)>=0)continue;const s=sim[i0*m+c];if(s>alt){alt=s;at={side:'w',idx:c}}}
+    for(let a=0;a<n;a++){if(b.bi.indexOf(a)>=0)continue;const s=sim[a*m+j0];if(s>alt){alt=s;at={side:'b',idx:a}}}
+    b.alt=alt;b.altAt=at;
+    if(b.how==='gap'||b.how==='ext')b.flags.push('pos');
+    else if(b.sc<T+0.08)b.flags.push('weak');
+    if(alt>=T&&b.sc-alt<=0.05)b.rv=true;
+  });
+  /* a rival that is itself matched at least as well elsewhere is no rival: both occurrences are accounted for */
+  blocks.forEach(b=>{
+    if(!b.rv)return;
+    const o=b.altAt.side==='w'?wB[b.altAt.idx]:bB[b.altAt.idx];
+    if(!(o&&o!==b&&o.sc>=b.alt-1e-6))b.flags.push('rival');
+  });
+  return{st:st,adds:adds,rgs:rgs,runs:runs,blocks:blocks,wB:wB};
+}
+
+/* ---------- display helpers ---------- */
+const CLOSE=/^[,.;:!?)\]\u201d\u2019]$/,OPEN=/^[(\[\u201c\u2018]$/;
+function sp(prev,t){
+  const d=t.d;let s=true;
+  if(!prev)s=false;
+  else if(t.br||prev.br)s=true;
+  else if(d==='\u2014'||prev.d==='\u2014')s=false;
+  else if(CLOSE.test(d))s=false;
+  else if(OPEN.test(prev.d))s=false;
+  else if((d==='"'||d==="'")&&(prev.w||/^[,.!?;:]$/.test(prev.d)))s=false;
+  else if((prev.d==='"'||prev.d==="'")&&prev.op)s=false;
+  if(d==='"'||d==="'")t.op=s||!prev;
+  return s;
+}
+function join(ts){let s='',prev=null;ts.forEach(t=>{s+=(sp(prev,t)?' ':'')+t.d;prev=t});return s}
+function show(g,full){
+  if(g.txt)return g.txt;
+  const ts=g.toks;if(!ts.length)return'om.';
+  if(!full&&ts.length>16){
+    const nl=ts.filter(t=>t.br).length;
+    return join(ts.slice(0,6))+' \u2026 '+join(ts.slice(-5))+' ['+(nl?(nl+1)+' '+S.unitWord+', ':'')+ts.filter(t=>t.w).length+' words]';
+  }
+  return join(ts);
+}
+
+/* ---------- collation ---------- */
+function collate(){
+  const o={q:$('oq').checked,d:$('od').checked,c:$('oc').checked,p:$('op').checked,par:$('opar').checked};
+  const wits=[],seen={};let bad='';
+  rows.querySelectorAll('.w').forEach(r=>{
+    const s=r.querySelector('.sig').value.trim(),t=r.querySelector('.txt').value;
+    if(!t.trim())return;
+    if(!s){bad='Give every pasted witness a siglum.';return}
+    if(seen[s]){bad='Two witnesses share the siglum '+s+'.';return}
+    seen[s]=1;wits.push({s:s,desc:r.querySelector('.desc').value.trim(),date:r.querySelector('.dt').value.trim(),raw:t,c:clean(t),head:Math.max(0,+r.querySelector('.hd').value||0)});
+  });
+  if(bad)return bad;
+  if(wits.length<2)return'Paste at least two witnesses.';
+  const bs=$('base').value,base=wits.find(w=>w.s===bs);
+  if(!base)return'The base text is empty. Choose another base or paste it.';
+  const ag=$('against').value;
+  const others=wits.filter(w=>w!==base&&(!ag||w.s===ag));
+  if(!others.length)return'Choose a comparison witness that has text and is not the base.';
+  settleHyphens(wits);
+  let mode=$('mode').value;
+  if(mode==='auto'){const nb=base.c.lines.filter(Boolean),wd=nb.reduce((a,l)=>a+l.split(/\s+/).length,0);mode=nb.length>3&&wd/nb.length<=14?'verse':'para'}
+  const verse=mode==='verse',SEP={d:verse?'/':'\u00b6',k:'\u00b6',w:false,br:true},BR=o.par?SEP:null;
+  parseEQ();
+  wits.forEach(w=>prep(w,mode,o));
+  weigh(wits);
+  if(!base.units.length)return'The base text has no lines left after its heading. Lower its heading-line count.';
+  const sig=JSON.stringify([bs,mode,o.p,$('ocl').checked,$('otj').checked,$('osn').checked,$('mark').value,wits.map(w=>[w.s,w.head,w.raw])]);
+  if(sig!==SIG){if(!KEEP)OV={};SIG=sig}
+  KEEP=false;
+  const T=+$('thr').value;
+  others.forEach(w=>{w.al=align(base.units,w.units,T,OV[w.s])});
+
+  const U=base.units,n=U.length,E=[],cnt={},lab=verse?'l. ':'\u00b6 ';
+  others.forEach(w=>{cnt[w.s]={S:0,A:0,P:0,om:0,add:0,mv:0,br:0}});
+  const put=(groups,toks,s)=>{const key=keyOf(toks),g=groups.find(q=>q.key===key);if(g)g.sig.push(s);else groups.push({key:key,toks:toks,sig:[s]})};
+  const range=(a,b)=>{const r=[];for(let k=a;k<=b;k++)r.push(k);return r};
+  const refOf=idx=>idx.length>1?U[idx[0]].n+'\u2013'+U[idx[idx.length-1]].n:''+U[idx[0]].n;
+
+  /* heading */
+  {const g=[{key:keyOf(base.hd),toks:base.hd,sig:[bs]}];others.forEach(w=>put(g,w.hd,w.s));
+   if(g.length>1)E.push({kind:'head',pos:-2,sub:0,ref:'title',groups:g})}
+
+  /* stanza breaks */
+  if(verse&&o.par)for(let i=1;i<n;i++){
+    const same=[bs],dif=[];
+    others.forEach(w=>{
+      const a=w.al.st[i-1],b=w.al.st[i];if(a.t!=='M'||b.t!=='M'||a.blk===b.blk)return;
+      let br=false;for(let j=a.blk.wj[a.blk.wj.length-1]+1;j<=b.blk.wj[0];j++)if(w.units[j].brk)br=true;
+      (br===U[i].brk?same:dif).push(w.s);
+    });
+    if(dif.length){
+      E.push({kind:'break',pos:i,sub:0,ref:U[i-1].n+'/'+U[i].n,type:'P',unit:i,frac:dif.length/(same.length-1+dif.length),
+        groups:[{txt:U[i].brk?'stanza break':'no stanza break',sig:same},{txt:U[i].brk?'no stanza break':'stanza break',sig:dif,type:'P'}]});
+      dif.forEach(s=>{cnt[s].br++});
+    }
+  }
+
+  /* whole lines missing or replaced */
+  const spanOf=new Int32Array(n).fill(-1),spans=[],iv=[];
+  others.forEach(w=>w.al.rgs.forEach(g=>iv.push([g.bi[0],g.bi[g.bi.length-1]])));
+  iv.sort((a,b)=>a[0]-b[0]);
+  iv.forEach(v=>{const l=spans[spans.length-1];if(l&&v[0]<=l[1])l[1]=Math.max(l[1],v[1]);else spans.push([v[0],v[1]])});
+  spans.forEach((s,k)=>{for(let i=s[0];i<=s[1];i++)spanOf[i]=k});
+  {let pk='',cur=null;
+   for(let i=0;i<n;i++){
+     if(spanOf[i]>=0){pk='';cur=null;continue}
+     const k=others.filter(w=>w.al.st[i].t==='O').map(w=>w.s).join(' ');
+     if(!k){pk='';cur=null;continue}
+     if(k===pk&&cur)cur[1]=i;else{cur=[i,i];spans.push(cur)}
+     pk=k;
+   }}
+  spans.forEach(spn=>{
+    const idx=range(spn[0],spn[1]),lem=cat(U,idx,SEP),g=[{key:keyOf(lem),toks:lem,sig:[bs]}];
+    others.forEach(w=>{
+      const r=[],seenB=new Set();let lacking=0;
+      idx.forEach(i=>{
+        const s=w.al.st[i];let piece=null;
+        if(s.t==='M'||s.t==='V'){if(!seenB.has(s.blk)){seenB.add(s.blk);piece=cat(w.units,s.blk.wj,SEP)}}
+        else{lacking++;if(s.t==='R'&&!seenB.has(s.rg)){seenB.add(s.rg);piece=cat(w.units,s.rg.wj,SEP)}}
+        if(piece){if(r.length)r.push(SEP);piece.forEach(t=>r.push(t))}
+      });
+      if(lacking){put(g,r,w.s);cnt[w.s].om+=lacking}
+      else if(keyOf(r)===g[0].key)g[0].sig.push(w.s);
+    });
+    E.push({kind:'line',pos:spn[0],sub:1,ref:refOf(idx),groups:g,units:idx});
+  });
+
+  /* transposed lines */
+  const mvMap=new Map();
+  others.forEach(w=>w.al.runs.forEach(r=>{
+    const k=r.bi[0]+'-'+r.bi[r.bi.length-1]+'>'+r.dest;let e=mvMap.get(k);
+    if(!e){
+      e={kind:'move',pos:r.bi[0],sub:2,ref:refOf(r.bi),type:'M',units:r.bi.slice(),
+        groups:[{toks:cat(U,r.bi,SEP),sig:[bs]},{txt:r.dest<0?'placed at the beginning':'placed after '+lab+U[r.dest].n,sig:[],type:'M'}]};
+      mvMap.set(k,e);E.push(e);
+    }
+    e.groups[1].sig.push(w.s);cnt[w.s].mv+=r.bi.length;
+  }));
+  mvMap.forEach(e=>{others.forEach(w=>{if(e.units.every(i=>w.al.st[i].t==='M'))e.groups[0].sig.push(w.s)});e.frac=e.groups[1].sig.length/others.length});
+
+  /* lines only a witness has */
+  const addMap=new Map(),addJobs=[];
+  others.forEach(w=>w.al.adds.forEach((wj,after)=>{if(!addMap.has(after))addMap.set(after,[]);addMap.get(after).push({w:w,units:wj.map(j=>w.units[j])});cnt[w.s].add+=wj.length}));
+  addMap.forEach((list,after)=>{
+    const ref=(after<0?0:U[after].n)+'+',e={kind:'add',pos:after+.9,sub:0,ref:ref,type:'S',after:after,groups:[{key:'\u0000',toks:[],sig:[]}]};E.push(e);
+    const clusters=[];
+    list.forEach(x=>{
+      for(const c of clusters){
+        const al=align(c.base.units,x.units,T,null);let hit=0,wh=0;
+        al.st.forEach(s=>{if(s.t==='M'||s.t==='V')hit++});al.blocks.forEach(b=>{wh+=b.wj.length});
+        if(hit*2>=c.base.units.length&&wh*2>=x.units.length){c.parts.push({s:x.w.s,units:x.units,al:al});return}
+      }
+      clusters.push({base:x,parts:[]});
+    });
+    clusters.forEach(c=>{
+      const L=c.base,toks=cat(L.units,L.units.map((u,k)=>k),SEP),g={key:keyOf(toks),toks:toks,sig:[L.w.s].concat(c.parts.map(p=>p.s))};
+      e.groups.push(g);
+      if(c.parts.length)addJobs.push({c:c,g:g,ref:ref,after:after});
+    });
+  });
+
+  /* words within matched lines */
+  const link=new Uint8Array(n);
+  others.forEach(w=>w.al.blocks.forEach(b=>{for(let k=1;k<b.bi.length;k++)link[b.bi[k-1]]=1}));
+  const BIG=10;
+  const makeSeg=(U,others,bs,sink)=>(a,b)=>{
+    const A=[],AU=[],AI=[],off=[];
+    for(let u=a;u<=b;u++){
+      if(u>a&&BR){A.push(BR);AU.push(u);AI.push(-1)}
+      off[u]=A.length;U[u].toks.forEach((t,q)=>{A.push(t);AU.push(u);AI.push(q)});
+    }
+    const N=A.length,ws=[];
+    others.forEach(w=>{
+      const cov=new Uint8Array(N),al=new Array(N).fill(null),ins=new Array(N+1).fill(null),seenB=new Set();let any=false;
+      for(let u=a;u<=b;u++){
+        const s=w.al.st[u];if((s.t!=='M'&&s.t!=='V')||seenB.has(s.blk))continue;
+        seenB.add(s.blk);any=true;
+        const bt=cat(U,s.blk.bi,BR),wt=cat(w.units,s.blk.wj,BR),df=diff(bt,wt),s0=off[s.blk.bi[0]];
+        for(let q=0;q<bt.length;q++){cov[s0+q]=1;if(df.al[q]>=0)al[s0+q]=wt[df.al[q]]}
+        for(let g=0;g<=bt.length;g++)if(df.ins[g])ins[s0+g]=(ins[s0+g]||[]).concat(df.ins[g].map(x=>wt[x]));
+      }
+      if(BR)for(let u=a+1;u<=b;u++){
+        const p=off[u]-1;if(cov[p])continue;
+        const s1=w.al.st[u-1],s2=w.al.st[u];
+        if(s1.t==='M'&&s2.t==='M'&&s1.blk!==s2.blk&&s2.blk.wj[0]===s1.blk.wj[s1.blk.wj.length-1]+1){cov[p]=1;al[p]=BR}
+      }
+      if(any)ws.push({s:w.s,cov:cov,al:al,ins:ins});
+    });
+    if(!ws.length)return;
+    const marksOf=(x,y)=>{const r=[];for(let q=x;q<y;q++)if(AI[q]>=0)r.push(AU[q]+':'+AI[q]);return r};
+    /* one witness's long cut or long insertion gets its own entry */
+    const bigs=new Map();
+    const addBig=(s,e,ctx,toks,sg)=>{
+      const k=s+':'+e+':'+keyOf(toks);let en=bigs.get(k);
+      if(!en){en={kind:'word',partial:true,pos:AU[Math.min(ctx,N-1)],sub:3+ctx/1e5,groups:[{toks:A.slice(ctx,e),sig:[bs]},{toks:toks,sig:[]}],marks:marksOf(ctx,e)};bigs.set(k,en);sink(en)}
+      en.groups[1].sig.push(sg);
+    };
+    ws.forEach(w=>{
+      for(let q=0;q<N;){
+        if(w.cov[q]&&!w.al[q]){
+          let e=q;while(e<N&&w.cov[e]&&!w.al[e])e++;
+          if(e-q>=BIG){
+            const r=[];for(let g=q;g<=e;g++)if(w.ins[g]){w.ins[g].forEach(t=>r.push(t));w.ins[g]=null}
+            for(let x=q;x<e;x++)w.cov[x]=0;
+            addBig(q,e,q,r,w.s);
+          }
+          q=e;
+        }else q++;
+      }
+      for(let g=0;g<=N;g++)if(w.ins[g]&&w.ins[g].length>=BIG){
+        const c=g>0&&w.cov[g-1]&&w.al[g-1]&&!A[g-1].br?g-1:g;
+        addBig(g,g,c,(c<g?[w.al[c]]:[]).concat(w.ins[g]),w.s);w.ins[g]=null;
+      }
+    });
+    const vt=new Uint8Array(N),vg=new Uint8Array(N+1);
+    ws.forEach(w=>{for(let q=0;q<N;q++)if(w.cov[q]&&!w.al[q])vt[q]=1;for(let g=0;g<=N;g++)if(w.ins[g])vg[g]=1});
+    /* two nearby changes that trade a word between them are one change: join them */
+    {const regs=[];let q=0;
+     while(q<=N){if(vg[q]||(q<N&&vt[q])){const s=q;let j=q;while(j<N&&vt[j])j++;regs.push([s,j]);q=j+1}else q++}
+     const lemW=r=>{const x=new Set();for(let k=r[0];k<r[1];k++)if(A[k].w)x.add(norm(A[k]));return x};
+     const rdW=r=>{const x=new Set();ws.forEach(w=>{for(let g=r[0];g<=r[1];g++)if(w.ins[g])w.ins[g].forEach(t=>{if(t.w)x.add(norm(t))})});return x};
+     const hit=(a,b)=>{for(const k of a)if(b.has(k))return true;return false};
+     for(let k=1;k<regs.length;k++){
+       const p=regs[k-1],r=regs[k];if(r[0]-p[1]>2)continue;
+       let brk=false;for(let x=p[1];x<r[0];x++)if(A[x].br)brk=true;
+       if(!brk&&(hit(lemW(p),rdW(r))||hit(lemW(r),rdW(p)))){for(let x=p[1];x<r[0];x++)vt[x]=1;regs[k]=[p[0],r[1]]}
+     }}
+    let i=0;
+    while(i<=N){
+      if(vg[i]||(i<N&&vt[i])){
+        const s=i;let j=i;while(j<N&&vt[j])j++;
+        let s2=s;
+        const hasW=()=>{for(let q=s2;q<j;q++)if(A[q].w)return true;return false};
+        while(!hasW()&&s2>0&&s-s2<3&&!vt[s2-1]&&!A[s2-1].br)s2--;
+        if(!hasW()){let g=0;while(j<N&&!A[j].br&&g<3){j++;g++;while(j<N&&vt[j])j++;if(hasW())break}}
+        const lo=Math.max(0,Math.min(s2,N-1)),hi=Math.max(j,Math.min(s2+1,N));
+        const P=ws.filter(w=>{for(let q=lo;q<hi;q++)if(!w.cov[q])return false;return true});
+        const bt=A.slice(s2,j),groups=[{key:keyOf(bt),toks:bt,sig:[bs]}];
+        P.forEach(w=>{
+          const r=[];
+          for(let q=s2;q<s;q++)if(w.al[q])r.push(w.al[q]);
+          for(let g=s;g<=j;g++){if(w.ins[g])w.ins[g].forEach(t=>r.push(t));if(g<j&&w.al[g])r.push(w.al[g])}
+          put(groups,r,w.s);
+        });
+        if(groups.length>1)sink({kind:'word',pos:AU[lo],sub:3+s2/1e5,groups:groups,marks:marksOf(s2,j),frac:(P.length-(groups[0].sig.length-1))/P.length});
+        i=j+1;
+      }else i++;
+    }
+  };
+  const segment=makeSeg(U,others,bs,en=>E.push(en));
+  for(let a=0;a<n;){let b=a;while(b<n-1&&link[b])b++;segment(a,b);a=b+1}
+  /* lines several witnesses add at the same place: collate them against the first witness that has them */
+  addJobs.forEach(job=>{
+    const c=job.c,L=c.base,nL=L.units.length,before=E.length;
+    const sink=en=>{en.inAdd=true;en.ref=job.ref;en.pos=job.after+.9+(en.pos+1)*1e-3;delete en.marks;en.frac=1;E.push(en)};
+    const seg=makeSeg(L.units,c.parts,L.w.s,sink),lk=new Uint8Array(nL);
+    c.parts.forEach(p=>p.al.blocks.forEach(b=>{for(let k=1;k<b.bi.length;k++)lk[b.bi[k-1]]=1}));
+    for(let a=0;a<nL;){let b=a;while(b<nL-1&&lk[b])b++;seg(a,b);a=b+1}
+    L.units.forEach((u,i)=>{
+      const gs=[{key:keyOf(u.toks),toks:u.toks,sig:[L.w.s]}];
+      c.parts.forEach(p=>{const s=p.al.st[i];if(s.t==='R'&&s.rg.bi[0]===i)put(gs,cat(p.units,s.rg.wj,SEP),p.s);else if(s.t==='O'||s.t==='R')put(gs,[],p.s)});
+      if(gs.length>1)sink({kind:'word',partial:true,pos:i,sub:2.5,groups:gs});
+    });
+    c.parts.forEach(p=>p.al.adds.forEach((wj,af)=>sink({kind:'add',type:'S',after:job.after,pos:af+.5,sub:5,groups:[{key:'\u0000',toks:[],sig:[]},{key:'x',toks:cat(p.units,wj,SEP),sig:[p.s]}]})));
+    if(E.length>before)job.g.vy=true;
+  });
+
+  /* order, number, classify */
+  E.sort((x,y)=>x.pos-y.pos||x.sub-y.sub);
+  const per={};
+  E.forEach(e=>{
+    if(e.kind==='word'&&!e.inAdd){const nn=U[e.pos].n;per[nn]=(per[nn]||0)+1;e.ref=nn+'.'+per[nn]}
+    e.key=e.kind+'|'+(e.kind==='word'&&!e.inAdd?U[e.pos].n:e.ref)+'|'+e.groups.map(g=>g.key!==undefined?g.key:g.txt||'').join('||');
+    if(e.frac===undefined)e.frac=1;
+  });
+  const tokMark=new Map(),lineEnt=[],before=[],after=new Map();
+  for(let u=0;u<n;u++){lineEnt.push([]);before.push([])}
+  E.forEach((e,x)=>{
+    if(e.marks)e.marks.forEach(k=>tokMark.set(k,x));
+    if(e.kind==='line'||e.kind==='move')e.units.forEach(u=>lineEnt[u].push(x));
+    if(e.kind==='break')before[e.unit].push(x);
+    if(e.kind==='add'){if(!after.has(e.after))after.set(e.after,[]);after.get(e.after).push(x)}
+  });
+  S={U:U,E:E,base:base,others:others,verse:verse,lab:lab,cnt:cnt,tokMark:tokMark,lineEnt:lineEnt,before:before,after:after,
+     unitWord:verse?'lines':'paragraphs',headEnt:E.findIndex(e=>e.kind==='head'),T:T,o:o,set:{ocl:$('ocl').checked,otj:$('otj').checked,osn:$('osn').checked},
+     eqLines:$('eq').value.split('\n').map(x=>x.trim()).filter(Boolean),
+     cols:wits.filter(w=>w===base||others.includes(w))};
+  finalize();
+  return'';
+}
+
+/* classify every reading; a manual change (RC) overrides the automatic class */
+function finalize(){
+  const cnt=S.cnt;
+  for(const s in cnt){cnt[s].S=0;cnt[s].A=0;cnt[s].P=0}
+  S.E.forEach(e=>{
+    e.manual=false;
+    if(e.kind==='word'||e.kind==='head'||e.kind==='line'){
+      const lem=e.groups[0].toks;let ty='P';
+      e.groups.forEach((g,k)=>{if(!k)return;g.type=cls(lem,g.toks);if(g.type==='S')ty='S';else if(g.type==='A'&&ty!=='S')ty='A'});
+      if(e.kind==='line')ty='S';
+      else{
+        const rc=RC[e.key];
+        if(rc&&ty!=='P'&&rc!==ty){ty=rc;e.manual=true;e.groups.forEach((g,k)=>{if(k)g.type=rc})}
+        e.groups.forEach((g,k)=>{if(k)g.sig.forEach(s=>{if(cnt[s])cnt[s][g.type]++})});
+      }
+      e.type=ty;
+    }
+    e.tag=e.kind==='head'?'heading':e.kind==='break'?'stanza break':e.kind==='line'?'line-level':e.kind==='add'?'addition':e.kind==='move'?'transposed':
+      e.type==='S'?'substantive':e.type==='A'?'accidental':S.verse?'line division':'paragraphing';
+    if(e.inAdd)e.tag+=', within the addition';
+    if(e.kind==='head')e.tag+=e.type==='S'?', substantive':', accidental';
+  });
+}
+
+/* ---------- rendering ---------- */
+function chip(x){
+  const e=S.E[x];let t,c='l',tip;
+  if(e.kind==='line'){const sg=e.groups.slice(1).map(g=>g.sig.join(' ')).join(' ');t='\u2212 '+sg;tip='Lacking or replaced in '+sg}
+  else if(e.kind==='move'){t='\u21c5 '+e.groups[1].sig.join(' ');c='m';tip='Placed elsewhere in '+e.groups[1].sig.join(' ')}
+  else if(e.kind==='break'){t=e.groups[1].txt+' in '+e.groups[1].sig.join(' ');c='b';tip='Stanza division differs'}
+  else{const g=e.groups.slice(1);t='+ '+g.map(q=>{const nl=q.toks.filter(k=>k.br).length+1;return nl+' '+(nl>1?S.unitWord:S.unitWord.slice(0,-1))+' in '+q.sig.join(' ')}).join('; ');tip='Only in the witnesses named'}
+  return'<button class="mk '+c+'" data-e="'+x+'" title="'+esc(tip)+'">'+esc(t)+'</button>';
+}
+function markOpen(x){
+  const e=S.E[x],sub=e.type==='S';
+  return'<mark class="'+(sub?'ms':'ma')+'" data-e="'+x+'" style="background:rgba(var(--'+(sub?'sub':'acc')+'),'+((sub?.07:.1)+(sub?.2:.16)*e.frac).toFixed(2)+')">';
+}
+function renderHeat(){
+  const U=S.U;let html='';
+  if(S.base.hd.length){
+    const t=esc(join(S.base.hd));
+    html+='<div class="ln ttl"><span class="no"></span><span class="tx">'+(S.headEnt>=0?markOpen(S.headEnt)+t+'</mark>':t)+'</span><span class="mg"></span></div>';
+  }
+  const gapRow=arr=>arr&&arr.length?'<div class="gap">'+arr.map(chip).join(' ')+'</div>':'';
+  html+=gapRow(S.after.get(-1));
+  U.forEach((u,i)=>{
+    html+=gapRow(S.before[i]);
+    const le=S.lineEnt[i],lv=le.some(x=>S.E[x].kind==='line'),mv=le.some(x=>S.E[x].kind==='move');
+    let tx='',prev=null,cur;
+    u.toks.forEach((t,q)=>{
+      const x=S.tokMark.get(i+':'+q),s=sp(prev,t)?' ':'';
+      if(x===cur)tx+=s+esc(t.d);
+      else tx+=(cur!==undefined?'</mark>':'')+s+(x!==undefined?markOpen(x):'')+esc(t.d);
+      cur=x;prev=t;
+    });
+    if(cur!==undefined)tx+='</mark>';
+    html+='<div class="ln'+(u.brk?' sb':'')+(lv?' lv':'')+(mv&&!lv?' mvd':'')+'"><button class="no'+(u.n%5===0?' f5':'')+'" data-u="'+i+'" title="Show this line in every witness">'+u.n+'</button><span class="tx">'+tx+'</span><span class="mg">'+le.map(chip).join('')+'</span></div>';
+    html+=gapRow(S.after.get(i));
+  });
+  const h=$('heat');h.className=S.verse?'':'prose';h.innerHTML=html;
+  closeSheet();
+}
+function entryHTML(e,full){
+  const arr=e.groups.map(g=>show(g,full));
+  if(!full){const dup=arr.map((a,k)=>arr.some((b,q)=>q!==k&&b===a));dup.forEach((d,k)=>{if(d)arr[k]=show(e.groups[k],true)})}
+  let h='',pl='';
+  e.groups.forEach((g,k)=>{
+    const last=k===e.groups.length-1,ac=e.type==='S'&&g.type==='A'&&e.kind!=='line'?' (acc.)':'',sg=g.sig.join(' ');
+    if(e.kind==='add'){if(!k)return;h+='<span class="sg">add.</span> <span class="rd">'+esc(arr[k])+'</span> <span class="sg">'+esc(sg)+'</span><span class="ac">'+(g.vy?' (with differences, listed next)':'')+'</span>'+(last?'':'; ');pl+='add. '+arr[k]+' '+sg+(g.vy?' (with differences, listed next)':'')+(last?'':'; ');return}
+    if(!k){const ss=e.partial?'':sg,sep=last?'':ss?'; ':' ';h+='<span class="rd">'+esc(arr[k])+']</span>'+(ss?' <span class="sg">'+esc(ss)+'</span>':'')+sep;pl+=arr[k]+']'+(ss?' '+ss:'')+sep;return}
+    h+='<span class="rd">'+esc(arr[k])+'</span> <span class="sg">'+esc(sg)+'</span>'+(ac?'<span class="ac">'+ac+'</span>':'')+(last?'':'; ');
+    pl+=arr[k]+' '+sg+ac+(last?'':'; ');
+  });
+  return{h:h,pl:pl};
+}
+function renderList(){
+  const f=$('filt').value,full=$('ofull').checked,fw=$('fwit').value,fs=$('fsing').checked,c={S:0,A:0,L:0,M:0,B:0};let html='',plain='',lastRef=null;
+  S.E.forEach((e,x)=>{
+    const wordish=e.kind==='word'||e.kind==='head';
+    if(wordish&&e.type==='S')c.S++;else if(wordish&&e.type==='A')c.A++;
+    else if(e.kind==='line'||e.kind==='add')c.L++;else if(e.kind==='move')c.M++;else c.B++;
+    const isS=(wordish&&e.type==='S')||e.kind==='line'||e.kind==='add';
+    const isA=wordish&&e.groups.some(g=>g.type==='A');
+    const isL=!wordish||e.type==='P';
+    if((f==='S'&&!isS)||(f==='A'&&!isA)||(f==='L'&&!isL))return;
+    if(fw&&!e.groups.some((g,k)=>k&&g.sig.indexOf(fw)>=0))return;
+    if(fs){
+      const rest=e.groups.slice(1).reduce((a,g)=>a+g.sig.length,0);
+      const alone=e.groups.some((g,k)=>k&&g.sig.length===1&&(!fw||g.sig[0]===fw))||(!fw&&wordish&&!e.partial&&e.groups[0].sig.length===1&&rest>=2&&e.groups.length===2);
+      if(!alone)return;
+    }
+    const r=entryHTML(e,full);
+    const can=wordish&&e.type!=='P',tag=e.tag+(e.manual?' \u270e':''),tc=e.kind==='move'?'m':isS?'s':'a';
+    const disp=e.kind==='word'?e.ref.split('.')[0]:e.ref,first=disp!==lastRef;lastRef=disp;
+    html+='<div class="ent'+(first?' first':'')+'"><span class="ref">'+(first?esc(disp):'')+'</span><span class="bd">'+r.h+
+      (can?'<button class="ty '+tc+'" data-rc="'+x+'" title="Tap to switch between substantive and accidental">'+tag+'</button>':'<span class="ty '+tc+'">'+tag+'</span>')+'<button class="ty a" data-note="'+x+'">'+(NOTES[e.key]?'edit note':'note')+'</button>'+(NOTES[e.key]?'<div class="nt">'+esc(NOTES[e.key])+'</div>':'')+'</span></div>';
+    plain+=e.ref+'\t['+e.tag+(e.manual?', set by hand':'')+']\t'+r.pl+'\n';
+  });
+  $('stats').textContent=S.E.length?S.E.length+(S.E.length===1?' entry':' entries')+' against '+S.base.s+': '+c.S+' substantive, '+c.A+' accidental, '+c.L+(S.verse?' whole-line, ':' whole-paragraph, ')+c.M+' transposed, '+c.B+(c.B===1?' break.':' breaks.')
+    :'No variants: the witnesses agree with '+S.base.s+'.';
+  const uw=S.verse?'Lines':'Paragraphs';
+  $('per').innerHTML='<tr><th>Witness</th><th>Substantive</th><th>Accidental</th><th>'+uw+' lacking or replaced</th><th>'+uw+' added</th><th>'+uw+' moved</th><th>Breaks changed</th></tr>'+
+    S.others.map(w=>{const k=S.cnt[w.s];return'<tr><td><i>'+esc(w.s)+'</i></td><td>'+k.S+'</td><td>'+k.A+'</td><td>'+k.om+'</td><td>'+k.add+'</td><td>'+k.mv+'</td><td>'+(k.br+k.P)+'</td></tr>'}).join('');
+  $('list').innerHTML=html||'<p class="hint">No variants of this kind.</p>';
+  $('plain').value=plain;
+  const a=agreement();
+  $('agt').innerHTML='<tr><th></th>'+a.names.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr>'+a.names.map((x,i)=>'<tr><td><i>'+esc(x)+'</i></td>'+a.names.map((y,j)=>'<td>'+(i===j?'\u2014':a.cell(i,j))+'</td>').join('')+'</tr>').join('');
+  $('rcreset').hidden=!S.E.some(e=>e.manual);
+  touch();
+}
+function agreement(){
+  const names=S.cols.map(w=>w.s),ag={};
+  S.E.forEach(e=>{
+    if(!((e.kind==='word'||e.kind==='head')&&e.type==='S')&&e.kind!=='line')return;
+    const at={};e.groups.forEach((g,k)=>{if(k&&g.type!=='S'&&e.kind!=='line')k=0;g.sig.forEach(q=>{at[q]=k})});
+    if(e.partial)delete at[S.base.s];
+    names.forEach((a,i)=>names.forEach((c,j)=>{if(j<=i||at[a]===undefined||at[c]===undefined)return;const key=a+'|'+c;ag[key]=ag[key]||[0,0];ag[key][1]++;if(at[a]===at[c])ag[key][0]++}));
+  });
+  return{names:names,cell:(i,j)=>{const r=ag[i<j?names[i]+'|'+names[j]:names[j]+'|'+names[i]];return r?r[0]+'/'+r[1]:'0/0'}};
+}
+function doubt(b,w){
+  if(!b||!b.flags||!b.flags.length)return'';
+  const f=x=>x.toFixed(2),out=[];
+  if(b.flags.indexOf('pos')>=0)out.push('<b>Matched by position</b> '+(b.how==='ext'?'beside a moved line':'between its neighbours')+'; the wording is only '+f(b.sc)+' alike.');
+  if(b.flags.indexOf('weak')>=0)out.push('<b>Weak match</b> '+f(b.sc)+' against a threshold of '+f(S.T)+'.');
+  if(b.flags.indexOf('rival')>=0&&b.altAt)out.push('<b>Close rival</b> '+(b.altAt.side==='w'?esc(w.s)+' '+S.lab+w.units[b.altAt.idx].n:'base '+S.lab+S.U[b.altAt.idx].n)+' scores '+f(b.alt)+' against this pair\u2019s '+f(b.sc)+'.');
+  return'<div class="why">'+out.join(' ')+'</div>';
+}
+function renderAlign(){
+  const sel=$('alw'),keep=sel.value;
+  sel.innerHTML=S.others.map(w=>'<option>'+esc(w.s)+'</option>').join('');
+  if(S.others.some(w=>w.s===keep))sel.value=keep;
+  const counts=S.others.map(w=>[w.s,w.al.blocks.filter(b=>b.flags&&b.flags.length).length]),total=counts.reduce((a,c)=>a+c[1],0);
+  $('alsum').textContent=total?'To check: '+counts.filter(c=>c[1]).map(c=>c[0]+' '+c[1]).join(', ')+'.':'No doubtful matches in any witness.';
+  $('altabbtn').textContent='Line matching'+(total?' ('+total+')':'');
+  const w=S.others.find(x=>x.s===sel.value);if(!w)return;
+  const only=$('alonly').checked;
+  const al=w.al,U=S.U,W=w.units;let h='<div></div><div class="hh">Base '+esc(S.base.s)+'</div><div class="hh">Witness '+esc(w.s)+'</div><div></div>';
+  const txt=(units,idx)=>esc(idx.map(k=>join(units[k].toks)).join(' / '));
+  const ub=(i,j)=>'<button class="ul" data-ub="'+i+'" data-uw="'+j+'" title="Break this match">\u00d7</button>';
+  const row=(bi,bt,wj,wt,cl,btn,blk)=>{
+    const d=doubt(blk,w);if(only&&!d)return;
+    if(d)cl+=' chk';
+    h+='<div class="an">'+(bi>=0?U[bi].n:'')+'</div><div class="c b '+cl+(bi>=0&&bi===selB?' sel':'')+'"'+(bi>=0?' data-b="'+bi+'"':'')+'>'+bt+'</div><div class="c w '+cl+'"'+(wj>=0?' data-w="'+wj+'"':'')+'>'+wt+d+'</div><div>'+(btn||'')+'</div>';
+  };
+  const an=al.blocks.filter(b=>!b.mv).sort((x,y)=>x.bi[0]-y.bi[0]);let pb=-1,pw=-1;
+  const gap=(nb,nw)=>{
+    for(let a=pb+1;a<nb;a++){
+      const s=al.st[a];
+      if(s.t==='V')row(a,txt(U,[a]),-1,'<i>elsewhere in '+esc(w.s)+':</i> '+txt(W,s.blk.wj),'mv',ub(a,s.blk.wj[0]),s.blk);
+      else row(a,txt(U,[a]),-1,'','un','');
+    }
+    for(let c=pw+1;c<nw;c++){
+      const b=al.wB[c];
+      if(b&&b.mv)row(-1,'<i>matches '+S.lab+U[b.bi[0]].n+'</i>',c,txt(W,[c]),'mv','');
+      else if(!b)row(-1,'',c,txt(W,[c]),'un','');
+    }
+  };
+  an.forEach(b=>{gap(b.bi[0],b.wj[0]);row(b.bi[0],txt(U,b.bi),b.wj[0],txt(W,b.wj),'',ub(b.bi[0],b.wj[0]),b);pb=b.bi[b.bi.length-1];pw=b.wj[b.wj.length-1]});
+  gap(U.length,W.length);
+  $('altab').innerHTML=h;
+  const ov=OV[w.s],nf=ov?Object.keys(ov.force).length+Object.keys(ov.forbid).length:0;
+  $('almsg').textContent=nf?nf+' manual change'+(nf>1?'s':'')+' for '+w.s:'';
+}
+function pairLinks(X,Y){
+  if(X===S.base)return Y.al.blocks.map(b=>({a:b.bi,b:b.wj,mv:b.mv}));
+  if(Y===S.base)return X.al.blocks.map(b=>({a:b.wj,b:b.bi,mv:b.mv}));
+  return align(X.units,Y.units,S.T,null).blocks.map(b=>({a:b.bi,b:b.wj,mv:b.mv}));
+}
+function renderPar(){
+  const cols=S.cols,k=cols.length,ROW=20,HEAD=30,SB=10,GUT=44;
+  const avail=$('par').clientWidth||860,CW=Math.max(170,Math.floor((avail-(k-1)*GUT)/k)),Wd=k*CW+(k-1)*GUT;
+  const Y=cols.map(c=>{let y=HEAD;return c.units.map(u=>{if(u.brk)y+=SB;const v=y;y+=ROW;return v})});
+  let H=HEAD;Y.forEach(a=>{if(a.length&&a[a.length-1]+ROW>H)H=a[a.length-1]+ROW});H+=6;
+  const blank=()=>cols.map(c=>new Array(c.units.length).fill(null));
+  const prev=blank(),next=blank(),sIn=blank(),sOut=blank(),node=new Map();
+  const reg=l=>{
+    l.rev=squash(cat(cols[l.ca].units,l.a,null))!==squash(cat(cols[l.cb].units,l.b,null));
+    l.a.forEach(i=>{const q=l.ca+':'+i;if(!node.has(q))node.set(q,[]);node.get(q).push(l)});
+    l.b.forEach(j=>{const q=l.cb+':'+j;if(!node.has(q))node.set(q,[]);node.get(q).push(l)});
+  };
+  let svg='',html='';
+  const draw=l=>{
+    const x1=l.ca*(CW+GUT)+CW,x2=l.cb*(CW+GUT),bend=GUT/2;
+    l.a.forEach(i=>l.b.forEach(j=>{
+      const ya=Y[l.ca][i]+ROW/2,yb=Y[l.cb][j]+ROW/2;
+      svg+='<path class="'+(l.skip?'ts':l.mv?'tm':l.rev?'tr':'tn')+'" data-t="'+l.ca+':'+i+':'+l.cb+':'+j+'" d="M'+x1+' '+ya+'C'+(x1+bend)+' '+ya+' '+(x2-bend)+' '+yb+' '+x2+' '+yb+'"/>';
+    }));
+  };
+  for(let c=0;c<k-1;c++)pairLinks(cols[c],cols[c+1]).forEach(l=>{
+    l.ca=c;l.cb=c+1;reg(l);l.a.forEach(i=>{next[c][i]=l});l.b.forEach(j=>{prev[c+1][j]=l});draw(l);
+  });
+  /* a line one witness lacks and a later one restores: join it across the gap */
+  for(let c=0;c<k-2;c++)for(let d=c+2;d<k;d++){
+    const ai=[],bj=[];
+    cols[c].units.forEach((u,i)=>{if(!next[c][i]&&!sOut[c][i])ai.push(i)});
+    cols[d].units.forEach((u,j)=>{if(!prev[d][j]&&!sIn[d][j])bj.push(j)});
+    if(!ai.length||!bj.length)continue;
+    align(ai.map(i=>cols[c].units[i]),bj.map(j=>cols[d].units[j]),S.T,null).blocks.forEach(b=>{
+      const l={ca:c,cb:d,a:b.bi.map(x=>ai[x]),b:b.wj.map(x=>bj[x]),skip:true};
+      reg(l);l.a.forEach(i=>{sOut[c][i]=l});l.b.forEach(j=>{sIn[d][j]=l});draw(l);
+    });
+  }
+  cols.forEach((w,c)=>{
+    const x=c*(CW+GUT);
+    html+='<div class="ph" style="left:'+x+'px;width:'+CW+'px"><i>'+esc(w.s)+'</i>'+(w===S.base?' <span class="pd">base</span>':' <button class="mk b" data-base="'+esc(w.s)+'">use as base</button>')+(w.desc?' <span class="pd">'+esc(w.desc)+'</span>':'')+'</div>';
+    w.units.forEach((u,i)=>{
+      const p=c>0?prev[c][i]:null;let cl='pl';
+      if(c>0){if(!p)cl+=sIn[c][i]?' back':' new';else if(p.mv)cl+=' mov';else if(p.rev)cl+=' rev'}
+      if(c<k-1&&!next[c][i])cl+=' drop';
+      html+='<div class="'+cl+'" style="left:'+x+'px;width:'+CW+'px;top:'+Y[c][i]+'px" data-c="'+c+'" data-i="'+i+'"><span class="pn">'+u.n+'</span>'+esc(join(u.toks))+'</div>';
+    });
+  });
+  $('par').innerHTML='<div class="pw" style="width:'+Wd+'px;height:'+H+'px"><svg width="'+Wd+'" height="'+H+'" aria-hidden="true">'+svg+'</svg>'+html+'</div>';
+  S.par={node:node};
+}
+function trace(c0,i0){
+  const cols=S.cols,seen=new Set(),q=[c0+':'+i0],paths=new Set();
+  while(q.length){
+    const key=q.pop();if(seen.has(key))continue;seen.add(key);
+    (S.par.node.get(key)||[]).forEach(l=>{
+      l.a.forEach(a=>{q.push(l.ca+':'+a);l.b.forEach(b=>paths.add(l.ca+':'+a+':'+l.cb+':'+b))});
+      l.b.forEach(b=>q.push(l.cb+':'+b));
+    });
+  }
+  $('par').querySelectorAll('.on').forEach(el=>el.classList.remove('on'));
+  $('par').querySelectorAll('.pl').forEach(el=>{if(seen.has(el.dataset.c+':'+el.dataset.i))el.classList.add('on')});
+  $('par').querySelectorAll('path').forEach(el=>{if(paths.has(el.dataset.t))el.classList.add('on')});
+  let h='<span class="ref">'+esc(cols[c0].s)+' '+S.lab+cols[c0].units[i0].n+'</span> <span class="tg">across the witnesses</span>';
+  cols.forEach((w,c)=>{
+    const mine=[];w.units.forEach((u,i)=>{if(seen.has(c+':'+i))mine.push(u)});
+    h+='<br><span class="sg">'+esc(w.s)+'</span> '+(mine.length?mine.map(u=>'<span class="ac">'+S.lab+u.n+'</span> <span class="r">'+esc(join(u.toks))+'</span>').join(' / '):'<span class="ac">not present</span>');
+  });
+  $('par').firstChild.classList.add('tracing');
+  $('detail').innerHTML=h;openSheet();
+}
+let TAB='text';
+function openSheet(){$('sheet').classList.add('open')}
+function closeSheet(){
+  $('sheet').classList.remove('open');
+  const p=$('par').firstChild;if(p&&p.classList){p.classList.remove('tracing');$('par').querySelectorAll('.on').forEach(el=>el.classList.remove('on'))}
+}
+function tab(n){
+  TAB=n;
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===n?'true':'false'));
+  ['text','par','app','al','ex'].forEach(k=>{$('v-'+k).hidden=k!==n});
+  closeSheet();if(n==='par'&&S)renderPar();
+}
+function fold(on){$('setup').hidden=on;$('strip').hidden=!on}
+function renderAll(){
+  $('res').style.display='block';renderHeat();renderList();if(TAB==='par')renderPar();renderAlign();
+  const o=S.others.map(w=>w.s);
+  $('stxt').textContent='Base text '+S.base.s+', collated against '+(o.length>1?o.slice(0,-1).join(', ')+' and '+o[o.length-1]:o[0])+'.';
+}
+function run(){
+  let err;try{err=collate()}catch(x){err='Could not collate: '+x.message}
+  $('msg').textContent=err||'';if(err)return false;
+  const fw=$('fwit'),keep=fw.value;
+  fw.innerHTML='<option value="">All</option>'+S.others.map(w=>'<option>'+esc(w.s)+'</option>').join('');
+  if(S.others.some(w=>w.s===keep))fw.value=keep;
+  renderAll();$('start').hidden=true;
+  $('helpnote').innerHTML=textNote().map(x=>'<p>'+esc(x)+'</p>').join('');
+  return true;
+}
+
+/* ---------- events ---------- */
+$('go').addEventListener('click',()=>{$('msg').textContent='Collating\u2026';$('snote').textContent='';selB=null;setTimeout(()=>{if(run()){fold(true);tab(TAB)}},30)});
+$('edit').addEventListener('click',()=>fold(false));
+$('tabs').addEventListener('click',ev=>{const b=ev.target.closest('[data-tab]');if(b)tab(b.dataset.tab)});
+$('shx').addEventListener('click',closeSheet);
+$('heat').addEventListener('click',ev=>{
+  const m=ev.target.closest('[data-e]'),d=$('detail');
+  if(m){
+    const e=S.E[+m.dataset.e];
+    const one=ts=>{const w=ts.filter(t=>t.w);return w.length===1?w[0]:null},lw=e.kind==='word'?one(e.groups[0].toks):null;
+    const eqb=g=>{const b=lw&&g.type==='S'?one(g.toks):null;return b&&norm0(b.d)!==norm0(lw.d)?' <button class="mk b" data-eq="'+esc(lw.d+' = '+b.d)+'">count as a spelling variant</button>':''};
+    d.innerHTML='<span class="ref">'+esc(e.ref)+'</span> <span class="tg">'+e.tag+'</span><br>'+
+      e.groups.map((g,k)=>e.kind==='add'&&!k?'':'<span class="sg">'+esc(e.kind==='add'?'add. '+g.sig.join(' '):g.sig.join(' '))+'</span> <span class="r">'+esc(show(g,true))+'</span>'+(e.type==='S'&&g.type==='A'&&e.kind!=='line'?' <span class="ac">(acc.)</span>':'')+(k?eqb(g):'')).filter(Boolean).join('<br>');
+    openSheet();return;
+  }
+  const b=ev.target.closest('.no[data-u]');if(!b)return;
+  const i=+b.dataset.u,U=S.U;
+  let h='<span class="ref">'+(S.verse?'line ':'\u00b6 ')+U[i].n+'</span> <span class="tg">all witnesses</span><br><span class="sg">'+esc(S.base.s)+'</span> <span class="r">'+esc(join(U[i].toks))+'</span>';
+  S.others.forEach(w=>{
+    const s=w.al.st[i];let t;
+    if(s.t==='M')t='<span class="r">'+esc(join(cat(w.units,s.blk.wj,null)))+'</span>';
+    else if(s.t==='V')t='<span class="r">'+esc(join(cat(w.units,s.blk.wj,null)))+'</span> <span class="ac">('+(s.run.dest<0?'placed at the beginning':'placed after '+S.lab+U[s.run.dest].n)+')</span>';
+    else if(s.t==='R')t='<span class="ac">replaced by</span> <span class="r">'+esc(w.al.st[i].rg.wj.map(k=>join(w.units[k].toks)).join(' / '))+'</span>';
+    else t='<span class="ac">not present</span>';
+    h+='<br><span class="sg">'+esc(w.s)+'</span> '+t;
+  });
+  d.innerHTML=h;openSheet();
+});
+$('filt').addEventListener('change',()=>S&&renderList());
+$('ofull').addEventListener('change',()=>S&&renderList());
+$('alw').addEventListener('change',()=>{selB=null;if(S)renderAlign()});
+$('alonly').addEventListener('change',()=>{if(S)renderAlign()});
+$('alclear').addEventListener('click',()=>{if(!S)return;delete OV[$('alw').value];selB=null;run()});
+$('altab').addEventListener('click',ev=>{
+  if(!S)return;
+  const sg=$('alw').value,u=ev.target.closest('.ul');
+  const ov=OV[sg]||(OV[sg]={force:{},forbid:{}});
+  if(u){const i=+u.dataset.ub,j=+u.dataset.uw;if(ov.force[i]===j)delete ov.force[i];ov.forbid[i+':'+j]=1;selB=null;run();return}
+  const b=ev.target.closest('.c.b[data-b]');
+  if(b){selB=selB===+b.dataset.b?null:+b.dataset.b;renderAlign();return}
+  const w=ev.target.closest('.c.w[data-w]');
+  if(w&&selB!==null){
+    const i=selB,j=+w.dataset.w;
+    for(const k in ov.force)if(+k===i||ov.force[k]===j)delete ov.force[k];
+    ov.force[i]=j;delete ov.forbid[i+':'+j];selB=null;run();
+  }
+});
+$('detail').addEventListener('click',ev=>{
+  const b=ev.target.closest('[data-eq]');if(!b||!S)return;
+  const t=$('eq');t.value=(t.value.trim()?t.value.replace(/\s+$/,'')+'\n':'')+b.dataset.eq;
+  run();$('detail').textContent='Added \u201c'+b.dataset.eq+'\u201d to the spelling variants.';openSheet();
+});
+$('list').addEventListener('click',ev=>{
+  const nb=ev.target.closest('[data-note]');
+  if(nb&&S){
+    const e=S.E[+nb.dataset.note],bd=nb.closest('.bd');if(bd.querySelector('textarea'))return;
+    const old=bd.querySelector('.nt');if(old)old.remove();
+    const ta=document.createElement('textarea');ta.value=NOTES[e.key]||'';ta.setAttribute('aria-label','Note on this entry');ta.placeholder='Note on this entry';
+    bd.appendChild(ta);ta.focus();
+    ta.addEventListener('blur',()=>{const v=ta.value.trim();if(v)NOTES[e.key]=v;else delete NOTES[e.key];renderList()});
+    return;
+  }
+  const b=ev.target.closest('[data-rc]');if(!b||!S)return;
+  const e=S.E[+b.dataset.rc];
+  if(e.manual)delete RC[e.key];else RC[e.key]=e.type==='S'?'A':'S';
+  finalize();renderList();renderHeat();
+});
+$('par').addEventListener('click',ev=>{
+  const nb=ev.target.closest('[data-base]');
+  if(nb&&S){$('base').value=nb.dataset.base;selB=null;run();return}
+  const l=ev.target.closest('.pl');if(l&&S)trace(+l.dataset.c,+l.dataset.i);
+});
+
+
+/* ---------- exports ---------- */
+const descDate=w=>[w.desc,w.date&&(w.desc||'').indexOf(w.date)<0?w.date:''].filter(Boolean).join(', ');
+const listOf=a=>a.length>1?a.slice(0,-1).join(', ')+' and '+a[a.length-1]:a[0]||'';
+function exMeta(){
+  const t=$('mt').value.trim()||(S.base.hd.length?join(S.base.hd):'Untitled collation');
+  return{title:t,author:$('ma').value.trim(),editor:$('me').value.trim(),slug:(t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'collation').slice(0,60)};
+}
+function textNote(){
+  const b=S.base,o=S.o,all=S.cols,had=k=>all.some(w=>w.c.removed.some(r=>r.indexOf(k)===0)),out=[],reg=[];
+  out.push('The text is that of '+b.s+(descDate(b)?' ('+descDate(b)+')':'')+', collated against '+listOf(S.others.map(w=>w.s))+'.');
+  if(o.d)reg.push('all forms of the dash are treated as one');
+  if(o.q)reg.push('curly and straight quotation marks are treated alike');
+  if(o.c)reg.push('capitalisation is ignored');
+  if(o.p)reg.push('punctuation is ignored');
+  if(S.set.otj&&had('turnover'))reg.push('turnover lines are joined to the line they continue, and a word hyphenated across a turnover is rejoined');
+  if(S.set.osn&&had('stanza number'))reg.push('stanza numbers are removed and taken as marking the start of a stanza');
+  if(S.set.ocl&&all.some(w=>w.c.removed.some(r=>r[0]==='['||r.indexOf('rule')===0)))reg.push('page and column markers and printer\u2019s rules are removed');
+  if(reg.length)out.push('Before collation, and without record in the apparatus: '+reg.join('; ')+'.');
+  out.push('A reading is classed as accidental when it differs from the base text only in punctuation, capitalisation, word division, accents, or the spelling of -ed as \u2019d; every other difference is classed as substantive.');
+  if(S.eqLines.length)out.push('These spellings are treated as the same word, and a difference between them as accidental: '+S.eqLines.join('; ')+'.');
+  const man=S.E.filter(e=>e.manual).length;
+  if(man)out.push(man+(man===1?' entry was':' entries were')+' classed by the editor rather than by rule.');
+  if(!o.par)out.push('Stanza and paragraph breaks were not recorded.');
+  out.push('Sigla shared by several witnesses follow the reading they agree in; a witness not named in an entry lacks the passage or is recorded in a whole-line entry.');
+  return out;
+}
+const exRef=e=>e.kind==='word'?e.ref.split('.')[0]:e.ref;
+function exBuckets(){
+  const b={S:[],A:[],L:[],B:[]};
+  S.E.forEach(e=>{const w=e.kind==='word'||e.kind==='head';
+    if(w&&e.type==='S')b.S.push(e);else if(w&&e.type==='A')b.A.push(e);else if(e.kind==='break'||(w&&e.type==='P'))b.B.push(e);else b.L.push(e)});
+  return b;
+}
+function entryPlain(e,classes){
+  const TN={S:'substantive',A:'accidental',P:'division',M:'moved'};let lem='';const rd=[];
+  e.groups.forEach((g,k)=>{
+    const t=show(g,true),sg=g.sig.join(' ');
+    if(e.kind==='add'){if(k)rd.push('add. '+t+' '+sg+(g.vy?' (with differences, listed next)':''));return}
+    if(!k){lem=t+']'+(e.partial?'':' '+sg);return}
+    rd.push(t+' '+sg+(classes&&TN[g.type]?' ['+TN[g.type]+']':e.type==='S'&&g.type==='A'&&e.kind!=='line'?' (acc.)':''));
+  });
+  return e.kind==='add'?rd.join('; '):lem+(e.partial?' ':'; ')+rd.join('; ');
+}
+function editionDoc(){
+  const m=exMeta(),U=S.U,v=S.verse,b=exBuckets();
+  const css='body{font:17px/1.6 "Iowan Old Style","Palatino Linotype",Georgia,serif;color:#1b1f24;background:#fff;max-width:36em;margin:0 auto;padding:48px 24px}'+
+    'h1{font-size:30px;line-height:1.2;margin:0 0 6px}h2{font-size:21px;font-weight:600;margin:44px 0 12px;padding-bottom:6px;border-bottom:1px solid #1b1f24}'+
+    '.au{font-size:20px;margin:0}.ed{margin:4px 0 0;color:#555}.gen{font-size:13px;color:#777;margin:14px 0 0}'+
+    'table{border-collapse:collapse;width:100%;font-size:15px}td,th{text-align:left;vertical-align:top;padding:4px 14px 4px 0;border-bottom:1px solid #ddd}th{font-weight:600}'+
+    '.l{display:grid;grid-template-columns:2.4em 1fr;column-gap:.8em}.l.sb{margin-top:1.1em}.n{font-size:12px;color:#777;text-align:right;padding-top:.35em;font-variant-numeric:tabular-nums}'+
+    '.l>span+span{padding-left:1.6em;text-indent:-1.6em}.hd{font-weight:600;margin:0 0 1em 3.2em}.pr .l{margin-bottom:.8em}'+
+    '.e{margin:0 0 .25em;padding-left:1.4em;text-indent:-1.4em;font-size:15.5px}.e b{margin-right:.5em}.k{font-style:italic}.nt{display:block;text-indent:0;font-size:14px;color:#555}'+
+    '.none{color:#777;font-style:italic}@media print{body{padding:0;max-width:none}h2{break-after:avoid}.e,.l{break-inside:avoid}}';
+  const eh=e=>{
+    let h='';
+    e.groups.forEach((g,k)=>{
+      const t=esc(show(g,true)),sg='<i>'+esc(g.sig.join(' '))+'</i>',last=k===e.groups.length-1;
+      if(e.kind==='add'){if(k)h+='<span class="k">add.</span> '+t+' '+sg+(g.vy?' (with differences, listed next)':'')+(last?'':'; ');return}
+      if(!k){h+=t+']'+(e.partial?' ':' '+sg+'; ');return}
+      h+=t+' '+sg+(e.type==='S'&&g.type==='A'&&e.kind!=='line'?' (acc.)':'')+(last?'':'; ');
+    });
+    return'<p class="e"><b>'+esc(exRef(e))+'</b>'+h+(NOTES[e.key]?'<span class="nt">Note: '+esc(NOTES[e.key])+'</span>':'')+'</p>';
+  };
+  const sec=(t,arr,lead)=>'<section><h2>'+t+'</h2>'+(lead?'<p>'+lead+'</p>':'')+(arr.length?arr.map(eh).join('\n'):'<p class="none">None.</p>')+'</section>';
+  let hd='';if(S.base.hd.length){const parts=[[]];S.base.hd.forEach(t=>{if(t.br)parts.push([]);else parts[parts.length-1].push(t)});hd='<p class="hd">'+parts.map(x=>esc(join(x))).join('<br>')+'</p>'}
+  return'<!DOCTYPE html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>'+esc(m.title)+'</title><style>'+css+'</style></head><body>\n'+
+    '<header><h1>'+esc(m.title)+'</h1>'+(m.author?'<p class="au">'+esc(m.author)+'</p>':'')+(m.editor?'<p class="ed">Edited by '+esc(m.editor)+'</p>':'')+'<p class="gen">Collated with Sigla.</p></header>\n'+
+    '<section><h2>Witnesses</h2><table><tr><th>Siglum</th><th>Date</th><th>Description</th></tr>'+S.cols.map(w=>'<tr><td><i>'+esc(w.s)+'</i></td><td>'+esc(w.date||'')+'</td><td>'+esc(w.desc||'')+(w===S.base?' (base text)':'')+'</td></tr>').join('')+'</table></section>\n'+
+    '<section><h2>Note on the text</h2>'+textNote().map(x=>'<p>'+esc(x)+'</p>').join('')+'</section>\n'+
+    '<section'+(v?'':' class="pr"')+'><h2>Text</h2>'+hd+U.map(u=>'<div class="l'+(u.brk?' sb':'')+'"><span class="n">'+(!v||u.n%5===0?u.n:'')+'</span><span>'+esc(join(u.toks))+'</span></div>').join('\n')+'</section>\n'+
+    sec('Historical collation',b.S,'Substantive variants. The reading before the bracket is that of the base text; numbers refer to its '+(v?'lines':'paragraphs')+'.')+'\n'+
+    sec(v?'Whole lines and transpositions':'Whole paragraphs and transpositions',b.L)+'\n'+
+    sec(v?'Stanza and line division':'Paragraphing',b.B)+'\n'+
+    sec('Accidentals',b.A)+'\n</body></html>\n';
+}
+function teiDoc(){
+  const U=S.U,E=S.E,m=exMeta(),v=S.verse,tag=v?'l':'p',ids={},TN={S:'substantive',A:'accidental',P:'division'};
+  const sid=s=>ids[s]||(ids[s]=/^[A-Za-z_][\w.\-]*$/.test(s)?s:'w'+s.replace(/[^\w.\-]/g,'_'));
+  const wl=a=>a.map(x=>'#'+sid(x)).join(' '),all=S.cols.map(w=>w.s);
+  const note=e=>NOTES[e.key]?'<note type="editorial">'+esc(NOTES[e.key])+'</note>':'';
+  const lines=ts=>{const parts=[[]];ts.forEach(t=>{if(t.br)parts.push([]);else parts[parts.length-1].push(t)});return parts.filter(x=>x.length).map(x=>'<'+tag+'>'+esc(join(x))+'</'+tag+'>').join('')};
+  const appWord=e=>'<app'+(TN[e.type]?' type="'+TN[e.type]+'"':'')+(e.manual?' subtype="set-by-editor"':'')+'><lem'+(e.partial?'':' wit="'+wl(e.groups[0].sig)+'"')+'>'+esc(join(e.groups[0].toks.filter(t=>!t.br)))+'</lem>'+
+    e.groups.slice(1).map(g=>{const ts=g.toks.filter(t=>!t.br);return'<rdg wit="'+wl(g.sig)+'"'+(TN[g.type]?' type="'+TN[g.type]+'"':'')+(ts.length?'>'+esc(join(ts))+'</rdg>':'/>')}).join('')+note(e)+'</app>';
+  const unit=i=>{
+    const u=U[i];let x='',prev=null,cur;
+    u.toks.forEach((t,q)=>{const k=S.tokMark.get(i+':'+q),s=sp(prev,t)?' ':'';prev=t;if(k!==undefined&&k===cur)return;x+=s+(k!==undefined?appWord(E[k]):esc(t.d));cur=k});
+    return'<'+tag+' n="'+u.n+'" xml:id="'+tag+u.n+'">'+x+'</'+tag+'>';
+  };
+  const startAt={},endAt={},mvAt={};
+  E.forEach(e=>{if(e.kind==='line'){startAt[e.units[0]]=e;endAt[e.units[e.units.length-1]]=e}if(e.kind==='move')(mvAt[e.units[0]]||(mvAt[e.units[0]]=[])).push(e)});
+  const addXML=arr=>(arr||[]).map(x=>{const e=E[x],adders=[];e.groups.slice(1).forEach(g=>g.sig.forEach(q=>adders.push(q)));
+    return'<app type="addition"><lem wit="'+wl(all.filter(q=>adders.indexOf(q)<0))+'"/>'+e.groups.slice(1).map(g=>'<rdg wit="'+wl(g.sig)+'">'+lines(g.toks)+'</rdg>').join('')+note(e)+'</app>'}).join('\n');
+  const body=[];
+  if(S.base.hd.length)body.push('<head>'+(S.headEnt>=0?appWord(E[S.headEnt]):esc(join(S.base.hd.filter(t=>!t.br))))+'</head>');
+  if(S.after.get(-1))body.push(addXML(S.after.get(-1)));
+  U.forEach((u,i)=>{
+    S.before[i].forEach(x=>body.push('<note type="stanza-division">'+esc(E[x].ref+': '+entryPlain(E[x]))+'</note>'));
+    if(v&&u.brk)body.push('<milestone unit="stanza"/>');
+    if(startAt[i]){const e=startAt[i],lack=[];e.groups.slice(1).forEach(g=>g.sig.forEach(q=>lack.push(q)));body.push('<app type="'+(v?'lines':'paragraphs')+'"><lem wit="'+wl(all.filter(q=>lack.indexOf(q)<0))+'">')}
+    (mvAt[i]||[]).forEach(e=>body.push('<note type="transposition" target="'+e.units.map(q=>'#'+tag+U[q].n).join(' ')+'">'+(v?'Line':'Paragraph')+(e.units.length>1?'s ':' ')+esc(e.ref)+(e.units.length>1?' are ':' is ')+esc(e.groups[1].txt)+' in '+esc(listOf(e.groups[1].sig))+'.</note>'));
+    body.push(unit(i));
+    if(endAt[i]){const e=endAt[i];body.push('</lem>'+e.groups.slice(1).map(g=>'<rdg wit="'+wl(g.sig)+'"'+(g.toks.length?'>'+lines(g.toks)+'</rdg>':'/>')).join('')+note(e)+'</app>')}
+    if(S.after.get(i))body.push(addXML(S.after.get(i)));
+  });
+  const loose=E.filter(e=>e.kind==='word'&&!(e.marks&&e.marks.length));
+  loose.forEach(e=>body.push('<note type="apparatus">'+esc(e.ref+': '+entryPlain(e))+'</note>'));
+  return'<?xml version="1.0" encoding="UTF-8"?>\n<TEI xmlns="http://www.tei-c.org/ns/1.0">\n<teiHeader>\n<fileDesc>\n<titleStmt><title>'+esc(m.title)+'</title>'+(m.author?'<author>'+esc(m.author)+'</author>':'')+(m.editor?'<editor>'+esc(m.editor)+'</editor>':'')+'</titleStmt>\n'+
+    '<publicationStmt><p>Unpublished collation generated with Sigla.</p></publicationStmt>\n<sourceDesc><listWit>\n'+
+    S.cols.map(w=>'<witness xml:id="'+sid(w.s)+'">'+esc(w.desc||w.s)+(w.date?' <date>'+esc(w.date)+'</date>':'')+(w===S.base?' (base text)':'')+'</witness>').join('\n')+'\n</listWit></sourceDesc>\n</fileDesc>\n'+
+    '<encodingDesc>\n<variantEncoding method="parallel-segmentation" location="internal"/>\n<editorialDecl>'+textNote().map(x=>'<p>'+esc(x)+'</p>').join('')+'</editorialDecl>\n</encodingDesc>\n</teiHeader>\n<text>\n<body>\n'+body.filter(Boolean).join('\n')+'\n</body>\n</text>\n</TEI>\n';
+}
+function briefingDoc(){
+  const m=exMeta(),U=S.U,E=S.E,v=S.verse,cols=S.cols,uw=v?'line':'paragraph',L=[];
+  const cell=x=>String(x).replace(/\|/g,'\\|');
+  L.push('# Collation briefing: '+m.title,'');
+  L.push([m.author?'Author: '+m.author+'.':'',m.editor?'Collation prepared by '+m.editor+'.':'','Generated with Sigla, a text-collation tool.'].filter(Boolean).join(' '),'');
+  L.push('## What this file is','','A collation of '+cols.length+' witnesses (versions) of one text. Witness '+S.base.s+' is the base text: every variant is reported as a departure from it, which is a convention of presentation and not a claim that it is the earliest or the best text. The file gives the questions to answer, then the evidence: the witnesses, how they were prepared, a '+uw+'-by-'+uw+' correspondence table, the complete apparatus, and (if included) each witness in full.','');
+  L.push('## Questions','',$('exq').value.trim()||'(none given)','');
+  L.push('## How to read the evidence','',
+    '- An apparatus entry has the form `lemma] sigla; reading sigla; ...`. The lemma is the base-text reading; the sigla after it are the witnesses that agree with it. `om.` means the words are absent; `add.` introduces '+uw+'s only the named witnesses have.',
+    '- Each reading is labelled substantive (wording differs) or accidental (only punctuation, capitalisation, word division or spelling differs). The labels were assigned by rule unless marked as set by the editor.',
+    '- A witness missing from an entry either lacks that passage or is covered by a whole-'+uw+' entry at the same place.',
+    '- References are base-text '+uw+' numbers. `12.2` is the second entry in '+uw+' 12; `11+` is material added after '+uw+' 11; `5/6` is the boundary between 5 and 6.',
+    '- The witness texts are transcriptions supplied by the editor. An odd reading may be a transcription slip and not a feature of the original; say so where you suspect it.',
+    '- Stanza breaks depend on how the transcription was pasted and are the least reliable evidence here.',
+    '- Keep what the evidence shows separate from what you infer from it, and say how confident you are.','');
+  L.push('## Witnesses','','| Siglum | Date | Description | '+(v?'Lines':'Paragraphs')+' | Role |','|---|---|---|---|---|');
+  cols.forEach(w=>L.push('| '+cell(w.s)+' | '+cell(w.date||'')+' | '+cell(w.desc||'')+' | '+w.units.length+' | '+(w===S.base?'base text':'collated')+' |'));
+  L.push('','## How the texts were prepared','');textNote().forEach(x=>L.push('- '+x));
+  L.push('','## Summary','',$('stats').textContent,'','| Witness | Substantive readings | Accidental readings | '+(v?'Lines':'Paragraphs')+' lacking or replaced | Added | Moved | Breaks changed |','|---|---|---|---|---|---|---|');
+  S.others.forEach(w=>{const k=S.cnt[w.s];L.push('| '+cell(w.s)+' | '+k.S+' | '+k.A+' | '+k.om+' | '+k.add+' | '+k.mv+' | '+(k.br+k.P)+' |')});
+  /* agreement in substantive readings */
+  const agr=agreement(),names=agr.names;
+  L.push('','## Agreement between witnesses','','For each pair: the number of places of substantive variation where the two read alike, out of the number where both are present. Accidental differences are ignored.','','| | '+names.map(cell).join(' | ')+' |','|---|'+names.map(()=>'---').join('|')+'|');
+  names.forEach((a,i)=>L.push('| **'+cell(a)+'** | '+names.map((c,j)=>i===j?'\u2014':agr.cell(i,j)).join(' | ')+' |'));
+  /* correspondence */
+  L.push('','## '+(v?'Line':'Paragraph')+' correspondence','','Each row is a base-text '+uw+'. A cell gives the number of the matching '+uw+' in that witness. `\u2014` means absent, `moved` means it stands elsewhere, `replaced` means different matter stands in its place. Rows beginning `+` are '+uw+'s found only in the witnesses shown.','','| '+cell(S.base.s)+' (base) | '+S.others.map(w=>cell(w.s)).join(' | ')+' |','|---|'+S.others.map(()=>'---').join('|')+'|');
+  const nums=(w,js)=>js.map(j=>w.units[j].n).join(', ');
+  const addRowMd=after=>{if(!S.others.some(w=>w.al.adds.has(after)))return;L.push('| + after '+(after<0?'the heading':U[after].n)+' | '+S.others.map(w=>w.al.adds.has(after)?nums(w,w.al.adds.get(after)):'').join(' | ')+' |')};
+  addRowMd(-1);
+  U.forEach((u,i)=>{
+    L.push('| '+u.n+' | '+S.others.map(w=>{const s=w.al.st[i];return s.t==='M'?nums(w,s.blk.wj):s.t==='V'?nums(w,s.blk.wj)+' (moved)':s.t==='R'?'replaced by '+nums(w,s.rg.wj):'\u2014'}).join(' | ')+' |');
+    addRowMd(i);
+  });
+  /* apparatus */
+  L.push('','## Apparatus','','Complete, in base-text order.','');
+  E.forEach(e=>{L.push('- **'+e.ref+'** ('+e.tag+(e.manual?', class set by the editor':'')+'): '+entryPlain(e,true));if(NOTES[e.key])L.push('  - Editor\u2019s note: '+NOTES[e.key].replace(/\s*\n\s*/g,' '))});
+  if(!E.length)L.push('No variants were found.');
+  if($('exfull').checked){
+    L.push('','## Witness texts','','As collated: page markers, turnovers and stanza numbers already tidied as described above, spacing regularised. Numbers are each witness\u2019s own '+uw+' numbers.','');
+    cols.forEach(w=>{
+      L.push('### '+w.s+(w===S.base?' (base text)':'')+(descDate(w)?': '+descDate(w):''),'','```');
+      if(w.hd.length)L.push('      '+join(w.hd),'');
+      w.units.forEach(u=>{if(u.brk)L.push('');L.push(String(u.n).padStart(4,' ')+'  '+join(u.toks))});
+      L.push('```','');
+    });
+  }
+  return L.join('\n')+'\n';
+}
+$('v-ex').addEventListener('click',async ev=>{
+  const b=ev.target.closest('[data-ex]');if(!b||!S)return;
+  const k=b.dataset.ex,msg=$('exmsg'),out=$('exout');let data,name;
+  try{
+    const m=exMeta();
+    if(k==='ed'){data=editionDoc();name=m.slug+'-edition.html'}
+    else if(k==='tei'){data=teiDoc();name=m.slug+(window.claude?'-tei.xml.txt':'-tei.xml')}
+    else{data=briefingDoc();name=m.slug+'-briefing.md'}
+  }catch(x){msg.textContent='Could not build the export: '+x.message;return}
+  if(b.dataset.act==='show'){
+    out.hidden=false;out.value=data;out.focus();out.select();
+    let ok=false;try{ok=document.execCommand('copy')}catch(x){}
+    msg.textContent=(ok?'Copied to the clipboard. ':'Select the text below and copy it. ')+Math.round(data.length/1024)+' KB.';return;
+  }
+  msg.textContent=DL?'Waiting for you to confirm the save\u2026':'Saving\u2026';
+  try{await saveFile(name,data,k==='ed'?'text/html':k==='tei'?'application/xml':'text/markdown');msg.textContent='Saved '+name+'.'}
+  catch(x){msg.textContent=saveWhy(x)+' Use \u201cShow to copy\u201d instead.'}
+});
+(async()=>{
+  let d=null;try{if(window.claude&&typeof window.claude.use==='function')d=await window.claude.use('downloads')}catch(x){}
+  DL=d;if(!d&&window.claude){$('v-ex').classList.add('nosave');$('fsave').hidden=true}
+})();
+
+/* ---------- this tool's own source ---------- */
+function selfSource(){
+  const b=$('selfsrc').textContent.trim();
+  if(!b)throw new Error('no source');
+  return new TextDecoder().decode(Uint8Array.from(atob(b),c=>c.charCodeAt(0)));
+}
+if(!$('selfsrc').textContent.trim())$('takeit').hidden=true; /* a pasted copy carries no second copy of itself */
+/* the collation logic alone, cut from the page by its section headings, for review without the interface */
+function engineSource(){
+  const t=selfSource(),M=n=>'/* ---------- '+n+' ---------- */',cut=(a,b)=>{const i=t.indexOf(M(a)),j=t.indexOf(M(b),i);if(i<0||j<0)throw new Error('section missing');return t.slice(i,j)};
+  return['// Sigla collation engine, extracted from the full page (JavaScript, runs in a browser).',
+    '// Left out: the interface, rendering, exports, saving, and the display helpers sp/join/show (which turn tokens back into text).',
+    '// Entry points: clean() tidies one pasted witness; prep() splits it into lines or paragraphs and tokens;',
+    '// align() matches the lines of one witness to the base; diff() compares words inside matched lines;',
+    '// collate() runs all of it and builds the apparatus entries; finalize() classifies them.',
+    '// $ is document.getElementById. OV holds manual line matches, RC manual reclassifications, EQ spelling pairs treated as one word.',
+    '',cut('paste clean-up','split a bulk paste'),cut('tokens and units','display helpers'),cut('collation','rendering')].join('\n');
+}
+function showSource(get,what){
+  const out=$('srcout'),msg=$('srcmsg');let data;
+  try{data=get()}catch(x){msg.textContent='Could not rebuild the source here.';return}
+  out.hidden=false;out.value=data;out.focus();out.select();
+  let ok=false;try{ok=document.execCommand('copy')}catch(x){}
+  msg.textContent=(ok?'Copied: ':'Select all the text in the box and copy it: ')+Math.round(data.length/1024)+' KB, '+what+'.';
+}
+$('srcbtn').addEventListener('click',()=>showSource(selfSource,'the whole page'));
+$('engbtn').addEventListener('click',()=>showSource(engineSource,'the collation engine only'));
+
+/* ---------- saved collations ---------- */
+const store={kind:'pending',db:null,uid:null,list:[]},LS='collator2.saved';
+const lsGet=()=>JSON.parse(localStorage.getItem(LS)||'{}');
+const ucol=()=>store.db.collection('data/users/'+store.uid);
+const st={
+  async list(){
+    if(store.kind==='db')return(await ucol().get()).docs.map(d=>Object.assign({id:d.id},d.data()));
+    const o=lsGet();return Object.keys(o).map(id=>Object.assign({id:id},o[id].meta));
+  },
+  async save(id,meta,wits,oldN){
+    if(store.kind==='db'){
+      const d=ucol().doc(id);
+      for(let k=0;k<wits.length;k++)await d.collection('w').doc('w'+k).set(wits[k]);
+      for(let k=wits.length;k<oldN;k++)await d.collection('w').doc('w'+k).delete();
+      await d.set(meta);return;
+    }
+    const o=lsGet();o[id]={meta:meta,wits:wits};localStorage.setItem(LS,JSON.stringify(o));
+  },
+  async load(id){
+    if(store.kind==='db'){
+      const d=ucol().doc(id),m=await d.get();if(!m.exists)throw{message:'that collation is no longer there'};
+      const meta=m.data(),wits=[];
+      for(let k=0;k<meta.nw;k++){const x=await d.collection('w').doc('w'+k).get();if(x.exists)wits.push(x.data())}
+      return{meta:meta,wits:wits};
+    }
+    const o=lsGet();if(!o[id])throw{message:'that collation is no longer there'};return o[id];
+  },
+  async del(id,nw){
+    if(store.kind==='db'){const d=ucol().doc(id);for(let k=0;k<nw;k++)await d.collection('w').doc('w'+k).delete();await d.delete();return}
+    const o=lsGet();delete o[id];localStorage.setItem(LS,JSON.stringify(o));
+  }
+};
+const why=x=>x&&x.code==='quota_exceeded'?'storage for this page is full; delete a saved collation first':
+  x&&x.code==='invalid_argument'?'a witness is too long to save (about 250 KB each is the limit), or you can only view this page':
+  x&&(x.name==='QuotaExceededError')?'this browser\u2019s storage is full':(x&&x.message)||'storage is unavailable';
+async function refreshSaved(){
+  const box=$('slist');
+  if(store.kind==='pending')return;
+  if(store.kind==='none'){box.innerHTML='';return}
+  try{store.list=await st.list()}catch(x){box.textContent='Could not read saved collations: '+why(x)+'.';return}
+  store.list.sort((a,b)=>String(b.saved).localeCompare(String(a.saved)));
+  box.innerHTML=store.list.length?store.list.map(m=>'<div class="sv"><span class="nm">'+esc(m.name)+'</span><span class="dt">'+esc(String(m.saved).slice(0,10))+', '+m.nw+' witnesses</span><button data-open="'+esc(m.id)+'">Open</button><button data-del="'+esc(m.id)+'">Delete</button></div>').join(''):'<p class="hint">Nothing saved yet.</p>';
+}
+async function initStore(){
+  let db=null,uid=null;
+  try{
+    if(window.claude&&typeof window.claude.use==='function'){
+      const r=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
+      if(r[0]&&r[1]){uid=await r[1].id();if(uid)db=r[0]}
+    }
+  }catch(x){}
+  if(db){store.db=db;store.uid=uid;store.kind='db';$('swhere').textContent='Collations are saved with this page under your Claude account, so they are there on any device where you open it.'}
+  else{
+    let ok=false;try{localStorage.setItem(LS+'.t','1');localStorage.removeItem(LS+'.t');ok=true}catch(x){}
+    store.kind=ok?'local':'none';
+    $('swhere').textContent=ok?'Collations are saved in this browser only. They will not appear on another device.':'Saving is not available in this view of the page.';
+    if(!ok)$('save').disabled=true;
+  }
+  refreshSaved();
+}
+const OPTS=['ocl','otj','osn','owt','oq','od','oc','op','opar'];
+function gatherSession(name){
+  const wits=[];
+  rows.querySelectorAll('.w').forEach(r=>{const t=r.querySelector('.txt').value;if(t.trim())wits.push({sig:r.querySelector('.sig').value.trim(),desc:r.querySelector('.desc').value,date:r.querySelector('.dt').value,head:+r.querySelector('.hd').value||0,text:t})});
+  const opts={};OPTS.forEach(k=>{opts[k]=$(k).checked});
+  const meta={name:name,saved:new Date().toISOString(),nw:wits.length,base:$('base').value,against:$('against').value,mode:$('mode').value,thr:$('thr').value,
+    mark:$('mark').value,eq:$('eq').value,opts:JSON.stringify(opts),ov:JSON.stringify(OV),rc:JSON.stringify(RC),
+    notes:JSON.stringify(NOTES),mt:$('mt').value,ma:$('ma').value,me:$('me').value,exq:$('exq').value};
+  return{meta:meta,wits:wits};
+}
+/* a collation may come from a file someone else made: take only what is expected, in the shape expected */
+function applySession(ses,collateNow){
+  const m=ses&&ses.meta,str=x=>typeof x==='string'?x:'',obj=x=>{try{const o=JSON.parse(str(x)||'{}');return o&&typeof o==='object'&&!Array.isArray(o)?o:{}}catch(e){return{}}};
+  if(!m||!Array.isArray(ses.wits)||!ses.wits.length)throw new Error('this is not a Sigla collation');
+  rows.innerHTML='';
+  const opts=obj(m.opts);OPTS.forEach(k=>{if(k in opts)$(k).checked=!!opts[k]});
+  $('mark').value=str(m.mark);$('eq').value=str(m.eq);
+  $('mode').value=['auto','verse','para','wrap'].indexOf(m.mode)>=0?m.mode:'auto';
+  $('thr').value=+m.thr>=0.3&&+m.thr<=0.8?m.thr:'0.5';
+  ses.wits.forEach(w=>addRow(str(w.sig),str(w.desc),str(w.text),w.head===undefined||w.head===null?undefined:Math.max(0,Math.min(9,+w.head||0)),str(w.date)));
+  $('mt').value=str(m.mt);$('ma').value=str(m.ma);$('me').value=str(m.me);if(str(m.exq))$('exq').value=m.exq;
+  NOTES={};const nt=obj(m.notes);for(const k in nt)if(typeof nt[k]==='string')NOTES[k]=nt[k];
+  refresh();$('base').value=str(m.base);$('against').value=str(m.against);
+  OV={};const ov=obj(m.ov);
+  for(const k in ov){const f={},b={},src=ov[k]||{};
+    for(const i in (src.force||{}))if(Number.isInteger(+i)&&Number.isInteger(src.force[i]))f[i]=src.force[i];
+    for(const p in (src.forbid||{}))if(/^\d+:\d+$/.test(p))b[p]=1;
+    OV[k]={force:f,forbid:b}}
+  RC={};const rc=obj(m.rc);for(const k in rc)if(rc[k]==='S'||rc[k]==='A')RC[k]=rc[k];
+  KEEP=true;selB=null;$('sname').value=str(m.name);
+  if(collateNow===false)return true;
+  const ok=run();if(ok){fold(true);$('savebox').open=false;$('snote').textContent='Opened \u201c'+(str(m.name)||'collation')+'\u201d.'}
+  return ok;
+}
+const FILEKIND='sigla-collation';
+function sessionText(){
+  const name=$('sname').value.trim()||$('mt').value.trim()||'collation',ses=gatherSession(name);
+  if(!ses.wits.length)throw new Error('there are no witnesses yet');
+  return{name:name,text:JSON.stringify({format:FILEKIND,version:1,meta:ses.meta,wits:ses.wits},null,1)};
+}
+function readSessionText(t){
+  let o;try{o=JSON.parse(t)}catch(e){throw new Error('this is not a Sigla collation')}
+  if(!o||o.format!==FILEKIND)throw new Error('this is not a Sigla collation');
+  return{meta:o.meta,wits:o.wits};
+}
+/* three settings: inside Claude with its save prompt, inside Claude without it, or a plain page where the browser downloads */
+async function saveFile(name,data,mime){
+  if(DL){await DL.save({filename:name,data:data});return}
+  if(window.claude)throw{code:'unavailable'};
+  const a=document.createElement('a'),u=URL.createObjectURL(new Blob([data],{type:mime||'text/plain'}));
+  a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);
+}
+const slugOf=t=>(String(t).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'collation').slice(0,60);
+const saveWhy=x=>{const c=x&&x.code;return c==='declined'?'Not saved.':c==='rate_limited'?'A save is already waiting for your answer. Try again in a moment.':c==='unavailable'?'Saving files is not available in this view.':'Could not save the file here.'};
+$('fsave').addEventListener('click',async()=>{
+  const sm=$('smsg');let s;try{s=sessionText()}catch(x){sm.textContent='Nothing to save: '+x.message+'.';return}
+  const fn=slugOf(s.name)+'.sigla.json';sm.textContent=DL?'Waiting for you to confirm the save\u2026':'Saving\u2026';
+  try{await saveFile(fn,s.text,'application/json');sm.textContent='Saved '+fn+'.'}catch(x){sm.textContent=saveWhy(x)+' Use \u201cShow collation as text\u201d instead.'}
+});
+$('fopen').addEventListener('click',()=>{$('ofile').value='';$('ofile').click()});
+$('ofile').addEventListener('change',()=>{
+  const f=$('ofile').files&&$('ofile').files[0],sm=$('smsg');if(!f)return;
+  const r=new FileReader();
+  r.onerror=()=>{sm.textContent='Could not read that file.'};
+  r.onload=()=>{try{const ok=applySession(readSessionText(String(r.result)));sm.textContent=ok?'Opened '+f.name+'.':'Opened '+f.name+', but it would not collate: see the message below.'}catch(x){sm.textContent='Could not open '+f.name+': '+x.message+'.'}};
+  r.readAsText(f);
+});
+$('tshow').addEventListener('click',()=>{
+  const sm=$('smsg'),t=$('stext');let s;try{s=sessionText()}catch(x){sm.textContent='Nothing to show: '+x.message+'.';return}
+  t.hidden=false;t.value=s.text;t.focus();t.select();
+  let ok=false;try{ok=document.execCommand('copy')}catch(x){}
+  sm.textContent=(ok?'Copied: ':'Select all the text in the box and copy it: ')+Math.round(s.text.length/1024)+' KB.';
+});
+$('tload').addEventListener('click',()=>{
+  const sm=$('smsg'),t=$('stext');
+  if(t.hidden||!t.value.trim()){t.hidden=false;t.value='';t.focus();sm.textContent='Paste the collation text into the box, then tap this again.';return}
+  try{const ok=applySession(readSessionText(t.value));sm.textContent=ok?'Loaded the pasted collation.':'Loaded, but it would not collate: see the message below.';if(ok){t.value='';t.hidden=true}}
+  catch(x){sm.textContent='Could not load it: '+x.message+'.'}
+});
+$('save').addEventListener('click',async()=>{
+  const sm=$('smsg'),name=$('sname').value.trim();
+  if(store.kind==='pending'){sm.textContent='Still checking where to save. Try again in a moment.';return}
+  if(!name){sm.textContent='Give the collation a name.';return}
+  const ses=gatherSession(name),wits=ses.wits,meta=ses.meta;
+  if(!wits.length){sm.textContent='There are no witnesses to save yet.';return}
+  const old=store.list.find(m=>m.name===name),id=old?old.id:'c'+Date.now().toString(36)+Math.floor(Math.random()*1e6).toString(36);
+  sm.textContent='Saving\u2026';$('save').disabled=true;
+  try{await st.save(id,meta,wits,old?old.nw:0);sm.textContent=(old?'Saved over \u201c':'Saved \u201c')+name+'\u201d.'}
+  catch(x){sm.textContent='Could not save: '+why(x)+'.'}
+  $('save').disabled=false;refreshSaved();
+});
+$('slist').addEventListener('click',async ev=>{
+  const o=ev.target.closest('[data-open]'),d=ev.target.closest('[data-del]'),sm=$('smsg');
+  if(d){
+    if(d.dataset.sure!=='1'){d.dataset.sure='1';d.textContent='Delete for good?';return}
+    const m=store.list.find(x=>x.id===d.dataset.del);
+    try{await st.del(d.dataset.del,m?m.nw:0);sm.textContent='Deleted.'}catch(x){sm.textContent='Could not delete: '+why(x)+'.'}
+    refreshSaved();return;
+  }
+  if(!o)return;
+  sm.textContent='Opening\u2026';
+  let ses;try{ses=await st.load(o.dataset.open)}catch(x){sm.textContent='Could not open: '+why(x)+'.';return}
+  try{applySession(ses);sm.textContent='Opened \u201c'+ses.meta.name+'\u201d.'}catch(x){sm.textContent='Could not open: '+x.message+'.'}
+});
+initStore();
+
+/* ---------- conveniences ---------- */
+const KEY='<div class="key"><h4>Text</h4>'+
+ '<p><span class="sw" style="background:rgba(var(--sub),.25);border-bottom:2px solid rgba(var(--sub),.8)"></span><b>Red, solid underline</b> a substantive variant. <span class="sw" style="background:rgba(var(--acc),.25);border-bottom:2px dotted rgba(var(--acc),.95)"></span><b>Grey, dotted</b> accidental only. A deeper shade means more witnesses differ.</p>'+
+ '<p><b>Red rule at the left</b> some witness lacks or replaces the line. <b>Blue rule</b> some witness has it elsewhere. In the margin: <b>\u2212</b> lacking in, <b>+</b> added by, <b>\u21c5</b> moved in the witnesses named.</p>'+
+ '<h4>Side by side</h4><p><b>Blue</b> the line has moved. <b>Pale red</b> reworded. <b>Strong red, bar at left</b> new in that witness. <b>Bar at right</b> dropped from the next. <b>Dashed thread</b> a line one witness lacks and a later one restores.</p>'+
+ '<h4>Apparatus</h4><p><i>lemma</i>] the base-text reading, then the witnesses that share it; other readings follow with theirs. <b>om.</b> absent. <b>add.</b> lines only those witnesses have. <b>(acc.)</b> an accidental reading inside a substantive entry. <b>\u270e</b> class set by hand.</p>'+
+ '<h4>Line matching</h4><p><b>Weak match</b> only just alike enough. <b>Close rival</b> another line would fit almost as well. <b>Matched by position</b> unlike in wording but standing in the same place.</p></div>';
+$('ex2').addEventListener('click',()=>{$('example').dataset.sure='1';$('example').click()});
+$('keybtn').addEventListener('click',()=>{$('detail').innerHTML=KEY;openSheet()});
+$('print').addEventListener('click',()=>{try{window.print()}catch(x){$('cmsg').textContent='Printing is not available in this view.'}});
+$('rcreset').addEventListener('click',()=>{if(!S)return;RC={};finalize();renderList();renderHeat()});
+$('fwit').addEventListener('change',()=>S&&renderList());
+$('fsing').addEventListener('change',()=>S&&renderList());
+$('proof').addEventListener('click',()=>{
+  ['oq','od','oc','op'].forEach(k=>{$(k).checked=false});previewAll();touch();
+  $('pmsg').textContent='Set for proofreading: quote forms, dash forms, capitals and punctuation are all compared. Choose the two texts under \u201cBase text\u201d and \u201cCompare against\u201d, then collate. Still not compared: spacing, and where lines wrap while turnover lines are joined.';
+});
+$('usual').addEventListener('click',()=>{
+  OPTS.forEach(k=>{$(k).checked=k!=='oc'&&k!=='op'});previewAll();touch();
+  $('pmsg').textContent='Usual settings restored.';
+});
+$('bydate').addEventListener('click',()=>{
+  const yr=r=>{const m=r.querySelector('.dt').value.match(/\d{4}/);return m?+m[0]:Infinity};
+  [...rows.querySelectorAll('.w')].map((r,i)=>[yr(r),i,r]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).forEach(x=>rows.appendChild(x[2]));
+  refresh();touch();
+});
+const hasText=()=>[...rows.querySelectorAll('.txt')].some(t=>t.value.trim());
+function twoTap(btn,ask,act){
+  btn.addEventListener('click',()=>{
+    if(hasText()&&btn.dataset.sure!=='1'){btn.dataset.sure='1';btn.dataset.label=btn.textContent;btn.textContent=ask;return}
+    if(btn.dataset.label)btn.textContent=btn.dataset.label;btn.dataset.sure='';act();
+  });
+}
+const EXAMPLE=[{"sig": "A", "date": "1831", "desc": "Poems (1831), as \u201cThe Doomed City\u201d", "text": "THE DOOMED CITY.\nLo! Death hath rear'd himself a throne\nIn a strange city, all alone,\nFar down within the dim west \u2014\nAnd the good, and the bad, and the worst, and the best,\nHave gone to their eternal rest.\n\nThere shrines, and palaces, and towers\nAre \u2014 not like any thing of ours \u2014\nO! no \u2014 O! no \u2014 ours never loom\nTo heaven with that ungodly gloom!\nTime-eaten towers that tremble not!\nAround, by lifting winds forgot,\nResignedly beneath the sky\nThe melancholy waters lie.\n\nA heaven that God doth not contemn\nWith stars is like a diadem \u2014\nWe liken our ladies\u2019 eyes to them \u2014\nBut there! that everlasting pall!\nIt would be mockery to call\nSuch dreariness a heaven at all.\n\nYet tho' no holy rays come down\nOn the long night-time of that town,\nLight from the lurid, deep sea\nStreams up the turrets silently \u2014\nUp thrones \u2014 up long-forgotten bowers\nOf sculptur'd ivy and stone flowers \u2014\nUp domes \u2014 up spires \u2014 up kingly halls \u2014\nUp fanes \u2014 up Babylon-like walls \u2014\nUp many a melancholy shrine\nWhose entablatures intertwine\nThe mask the \u2014 the viol \u2014 and the vine.\n\nThere open temples \u2014 open graves\nAre on a level with the waves \u2014\nBut not the riches there that lie\nIn each idol's diamond eye.\nNot the gaily-jewell'd dead\nTempt the waters from their bed:\nFor no ripples curl,  alas!\nAlong that wilderness of glass \u2014\nNo swellings hint that winds may be\nUpon a far-off happier sea:\nSo blend the turrets and shadows there\nThat all seem pendulous in air,\nWhile from the high towers of the town\nDeath looks gigantically down.\n\nBut lo! a stir is in the air!\nThe wave! there is a ripple there!\nAs if the towers had thrown aside,\nIn slightly sinking, the dull tide \u2014\nAs if the turret-tops had given\nA vacuum in the filmy heaven:\nThe waves have now a redder glow \u2014\nThe very hours are breathing low \u2014\nAnd when, amid no earthly moans,\nDown, down that town shall settle hence,\nHell rising from a thousand thrones\nShall do it reverence,\nAnd Death to some more happy clime\nShall give his undivided time."}, {"sig": "B", "date": "1836", "desc": "Southern Literary Messenger, as \u201cThe City of Sin\u201d", "text": "THE CITY OF SIN.\nBY E. A. POE.\nLO! Death hath rear'd himself a throne\nIn a strange city, all alone,\nFar down within the dim west \u2014\nWhere the good, and the bad, and the worst, and the best,\nHave gone to their eternal rest.\n\nThere shrines, and palaces, and towers\nAre \u2014 not like any thing of ours \u2014\nOh no! \u2014 O no! \u2014 ours never loom\nTo heaven with that ungodly gloom!\nTime-eaten towers that tremble not!\nResemble nothing that is ours.\nAround, by lifting winds forgot,\nResignedly beneath the sky\nThe melancholy waters lie.\n\nNo holy rays from heaven come down\nOn the long night-time of that town,\nBut light from out the lurid sea\nStreams up the turrets silently \u2014\nUp thrones \u2014 up long-forgotten bowers\nOf scultur'd ivy and stone flowers \u2014\nUp domes \u2014 up spires \u2014 up kingly halls \u2014\nUp fanes \u2014 up Babylon-like walls \u2014\nUp many a melancholy shrine\nWhose entablatures intertwine\nThe mask \u2014 the viol \u2014 and the vine.\n\nThere open temples \u2014 open graves\nAre on a level with the waves \u2014\nBut not the riches there that lie\nIn each idol's diamond eye,\nNot the gaily-jewell'd dead\nTempt the waters from their bed:\nFor no ripples curl, alas!\nAlong that wilderness of glass \u2014\nNo swellings hint that winds may be\nUpon a far-off happier sea:\nSo blend the turrets and shadows there\nThat all seem pendulous in air,\nWhile from the high towers of the town\nDeath looks gigantically down.\n\nBut lo! a stir is in the air!\nThe wave \u2014 there is a ripple there!\nAs if the towers had thrown aside,\nIn slightly sinking, the dull tide \u2014\nAs if the turret-tops had given\nA vacuum in the filmy heaven.\nThe waves have now a redder glow \u2014\nThe very hours are breathing low \u2014\nAnd when, amid no earthly moans,\nDown, down, that town shall settle hence,\nAll Hades, from a thousand thrones,\nShall do it reverence,\nAnd Death to some more happy clime\nShall give his undivided time."}, {"sig": "C", "date": "1845", "desc": "The Raven and Other Poems, J. L. Graham copy with Poe\u2019s changes", "text": "THE CITY IN THE SEA.\nLO! Death has reared himself a throne\nIn a strange city lying alone\nFar down within the dim West,\nWhere the good and the bad and the worst and the best\nHave gone to their eternal rest.\nThere shrines and palaces and towers\n(Time-eaten towers that tremble not!)\nResemble nothing that is ours.\nAround, by lifting winds forgot,\nResignedly beneath the sky\nThe melancholy waters lie.\n\nNo rays from the holy heaven come down\nOn the long night-time of that town;\nBut light from out the lurid sea\nStreams up the turrets silently \u2014\nGleams up the pinnacles far and free \u2014\nUp domes \u2014 up spires \u2014 up kingly halls \u2014\nUp fanes \u2014 up Babylon-like walls \u2014\nUp shadowy long-forgotten bowers\nOf scultured ivy and stone flowers \u2014\nUp many and many a marvellous shrine\nWhose wreathed friezes intertwine\nThe viol, the violet, and the vine.\n\nResignedly beneath the sky\nThe melancholy waters lie.\nSo blend the turrets and shadows there\nThat all seem pendulous in air,\nWhile from a proud tower in the town\nDeath looks gigantically down.\n\nThere open fanes and gaping graves\nYawn level with the luminous waves;\nBut not the riches there that lie\nIn each idol's diamond eye \u2014\nNot the gaily-jewelled dead\nTempt the waters from their bed;\nFor no ripples curl, alas!\nAlong that wilderness of glass \u2014\nNo swellings tell that winds may be\nUpon some far-off happier sea \u2014\nNo heavings hint that winds have been\nOn seas less hideously serene.\n\nBut lo, a stir is in the air!\nThe wave \u2014 there is a movement there!\nAs if the towers had thrown aside,\nIn slightly sinking, the dull tide \u2014\nAs if their tops had feebly given\nA void within the filmy Heaven.\nThe waves have now a redder glow \u2014\nThe hours are breathing faint and low \u2014\nAnd when, amid no earthly moans,\nDown, down that town shall settle hence,\nHell, rising from a thousand thrones,\nShall do it reverence."}];
+twoTap($('example'),'Replace what is here?',()=>{
+  OV={};RC={};NOTES={};
+  applySession({meta:{name:'',base:'C',mt:'The City in the Sea',ma:'Edgar Allan Poe',opts:'{}',mode:'verse',thr:'0.5',mark:'Text:'},wits:EXAMPLE});
+  $('snote').textContent='This is the built-in example: three texts of Poe\u2019s poem.';
+});
+function startFresh(){
+  rows.innerHTML='';['A','B','C'].forEach(x=>addRow(x));OV={};RC={};NOTES={};S=null;SIG='';
+  ['sname','mt','ma','me','eq'].forEach(k=>{$(k).value=''});
+  $('res').style.display='none';fold(false);closeSheet();$('msg').textContent='';$('snote').textContent='';
+  try{localStorage.removeItem(DRAFT)}catch(x){}
+  dupNote();
+}
+twoTap($('fresh'),'Clear everything?',startFresh);
+twoTap($('fresh2'),'Clear everything?',startFresh);
+/* display: colour scheme and text size, remembered in this browser */
+const VIEW='sigla.view',rootEl=document.documentElement,hostTheme=rootEl.getAttribute('data-theme');
+let view={theme:'auto',size:1};
+try{const v=JSON.parse(localStorage.getItem(VIEW)||'null');if(v&&['auto','light','dark'].indexOf(v.theme)>=0&&[1,1.2,1.4].indexOf(v.size)>=0)view=v}catch(x){}
+function applyView(){
+  if(view.theme==='auto'){if(hostTheme)rootEl.setAttribute('data-theme',hostTheme);else rootEl.removeAttribute('data-theme')}
+  else rootEl.setAttribute('data-theme',view.theme);
+  document.body.style.zoom=view.size===1?'':String(view.size);
+  $('thbtn').textContent='Theme: '+view.theme;
+  $('szbtn').textContent='Text: '+(view.size===1?'normal':view.size===1.2?'large':'larger');
+  try{localStorage.setItem(VIEW,JSON.stringify(view))}catch(x){}
+  if(S&&TAB==='par')renderPar();
+}
+$('thbtn').addEventListener('click',()=>{view.theme=view.theme==='auto'?'light':view.theme==='light'?'dark':'auto';applyView()});
+$('szbtn').addEventListener('click',()=>{view.size=view.size===1?1.2:view.size===1.2?1.4:1;applyView()});
+applyView();
+/* two witnesses that read alike: a finding or a double paste, and only the editor knows which */
+function dupNote(){
+  $('start').hidden=hasText()||$('res').style.display==='block';
+  const o={q:$('oq').checked,d:$('od').checked,c:$('oc').checked,p:$('op').checked},ws=[],out=[];
+  rows.querySelectorAll('.w').forEach(r=>{const t=r.querySelector('.txt').value;if(t.trim())ws.push({s:r.querySelector('.sig').value.trim()||'an unlabelled witness',raw:t.trim(),head:Math.max(0,+r.querySelector('.hd').value||0)})});
+  const tidy=w=>w.k!==undefined?w.k:(w.k=clean(w.raw).lines.filter(Boolean).slice(w.head).map(l=>keyOf(tokenize(l.split(HYJ).join(''),o))).join('\n'));
+  if(ws.length<=12)for(let i=0;i<ws.length;i++)for(let j=i+1;j<ws.length;j++){
+    if(ws[i].raw===ws[j].raw)out.push(ws[i].s+' and '+ws[j].s+' are identical as pasted.');
+    else if(tidy(ws[i])&&tidy(ws[i])===tidy(ws[j]))out.push('The texts of '+ws[i].s+' and '+ws[j].s+' are identical once tidied: they differ only in layout, headings, or forms the settings treat as equal.');
+  }
+  $('dup').textContent=out.join(' ');
+}
+/* unsaved work is kept in this browser so that a reload does not lose it */
+const DRAFT='sigla.draft';let draftT=null;
+function touch(){
+  clearTimeout(draftT);
+  draftT=setTimeout(()=>{
+    dupNote();
+    try{const d=gatherSession($('sname').value.trim());if(d.wits.length)localStorage.setItem(DRAFT,JSON.stringify(d));else localStorage.removeItem(DRAFT)}catch(x){}
+  },600);
+}
+document.addEventListener('input',touch);document.addEventListener('change',touch);
+(function(){
+  let d=null;try{d=JSON.parse(localStorage.getItem(DRAFT)||'null')}catch(x){}
+  if(!d||!Array.isArray(d.wits)||!d.wits.length)return;
+  try{applySession(d,false);dupNote();$('msg').textContent='Your unsaved work from last time is back. Tap Collate to continue, or \u201cStart fresh\u201d to clear it.'}catch(x){}
+})();
+
+
+$('copy').addEventListener('click',()=>{
+  const p=$('plain');p.style.display='block';p.focus();p.select();
+  let ok=false;try{ok=document.execCommand('copy')}catch(x){}
+  $('cmsg').textContent=ok?'Copied':'Select the text in the box below and copy it.';
+});
+</script></body></html>
