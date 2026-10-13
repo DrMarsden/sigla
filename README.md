@@ -1,5 +1,3 @@
-# sigla
-Sigla is a textual collator to compare states of literary texts
 # Sigla
 
 A collator for the witnesses of a text: variants, transpositions and an apparatus, in verse or prose.
@@ -60,9 +58,17 @@ Your texts stay in your browser. Sigla sends nothing to a server. The page reque
 
 ## Citing
 
-Marsden, Steve, and Claude. *Sigla: A Collator for the Witnesses of a Text*. 2026. https://YOUR-USERNAME.github.io/sigla/
+Marsden, Steve, and Claude. *Sigla: A Collator for the Witnesses of a Text*. 2026. https://drmarsden.github.io/sigla/
 
 DOI: (to be added)
+
+## Related tools
+
+- [Revision Slider](https://github.com/DrMarsden/revision-slider) loads a Sigla briefing and lets you drag through the versions of a text in order.
+- [The Composing Room](https://github.com/DrMarsden/composing-room) simulates setting type by hand; what you set can be copied into Sigla as a witness.
+- [Core Elements](https://github.com/DrMarsden/core-elements) teaches MLA 9 works-cited entries.
+
+All are collected at https://tinyurl.com/drmarsden.
 
 ## Licence
 
